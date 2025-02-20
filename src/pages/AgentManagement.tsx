@@ -1,6 +1,7 @@
 
 import { useState } from "react";
-import { Search, Filter, Plus, MoreVertical } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Search, Filter, Plus } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +9,7 @@ import AgentCard from "@/components/AgentCard";
 import AgentStatusPie from "@/components/AgentStatusPie";
 
 const AgentManagement = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
   // Mock data - would come from backend in real implementation
@@ -17,7 +19,7 @@ const AgentManagement = () => {
       name: "John Smith",
       avatar: "/placeholder.svg",
       role: "Senior Agent",
-      status: "online",
+      status: "online" as const,
       performance: {
         callsHandled: 145,
         satisfaction: 98,
@@ -34,7 +36,7 @@ const AgentManagement = () => {
       name: "Sarah Johnson",
       avatar: "/placeholder.svg",
       role: "Customer Service Agent",
-      status: "busy",
+      status: "busy" as const,
       performance: {
         callsHandled: 128,
         satisfaction: 96,
@@ -51,7 +53,7 @@ const AgentManagement = () => {
       name: "Michael Brown",
       avatar: "/placeholder.svg",
       role: "Technical Support",
-      status: "offline",
+      status: "offline" as const,
       performance: {
         callsHandled: 98,
         satisfaction: 94,
@@ -85,13 +87,15 @@ const AgentManagement = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <div className="flex gap-4">
-              <Input
-                placeholder="Search agents..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="max-w-sm"
-                prefix={<Search className="h-4 w-4 text-gray-400" />}
-              />
+              <div className="relative flex-1 max-w-sm">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Search agents..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
               <Button variant="outline">
                 <Filter className="mr-2 h-4 w-4" /> Filter
               </Button>
@@ -99,7 +103,9 @@ const AgentManagement = () => {
 
             <div className="grid grid-cols-1 gap-4">
               {filteredAgents.map((agent) => (
-                <AgentCard key={agent.id} agent={agent} />
+                <div key={agent.id} onClick={() => navigate(`/agents/${agent.id}`)} className="cursor-pointer">
+                  <AgentCard agent={agent} />
+                </div>
               ))}
             </div>
           </div>
