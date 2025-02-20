@@ -103,6 +103,33 @@ export type Database = {
           },
         ]
       }
+      monitoring_settings: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          id: string
+          last_monitored_at: string | null
+          monitor_frequency: string
+          supervisor_id: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          id?: string
+          last_monitored_at?: string | null
+          monitor_frequency: string
+          supervisor_id: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          id?: string
+          last_monitored_at?: string | null
+          monitor_frequency?: string
+          supervisor_id?: string
+        }
+        Relationships: []
+      }
       qa_criteria: {
         Row: {
           category: string
@@ -211,6 +238,73 @@ export type Database = {
           },
         ]
       }
+      quiz_attempts: {
+        Row: {
+          agent_id: string
+          completed_at: string | null
+          id: string
+          score: number
+          training_resource_id: string | null
+        }
+        Insert: {
+          agent_id: string
+          completed_at?: string | null
+          id?: string
+          score: number
+          training_resource_id?: string | null
+        }
+        Update: {
+          agent_id?: string
+          completed_at?: string | null
+          id?: string
+          score?: number
+          training_resource_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_attempts_training_resource_id_fkey"
+            columns: ["training_resource_id"]
+            isOneToOne: false
+            referencedRelation: "training_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string | null
+          id: string
+          options: Json
+          question: string
+          training_resource_id: string | null
+        }
+        Insert: {
+          correct_answer: string
+          created_at?: string | null
+          id?: string
+          options: Json
+          question: string
+          training_resource_id?: string | null
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string | null
+          id?: string
+          options?: Json
+          question?: string
+          training_resource_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_training_resource_id_fkey"
+            columns: ["training_resource_id"]
+            isOneToOne: false
+            referencedRelation: "training_resources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       training_modules: {
         Row: {
           category: string
@@ -240,6 +334,44 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      training_resources: {
+        Row: {
+          content_url: string | null
+          created_at: string | null
+          duration: number | null
+          id: string
+          module_id: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          content_url?: string | null
+          created_at?: string | null
+          duration?: number | null
+          id?: string
+          module_id?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          content_url?: string | null
+          created_at?: string | null
+          duration?: number | null
+          id?: string
+          module_id?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_resources_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "training_modules"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
