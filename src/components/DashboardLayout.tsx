@@ -1,6 +1,6 @@
 
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings } from "lucide-react";
+import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -16,6 +16,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     { icon: Users, label: "Agent Management", route: "/agents" },
     { icon: BookOpen, label: "Training Lounge", route: "/training" },
     { icon: CheckSquare, label: "QA Scoring", route: "/qa" },
+    { icon: Award, label: "Recognition", route: "/recognition" },
     { icon: Settings, label: "Settings", route: "/settings" },
   ];
 

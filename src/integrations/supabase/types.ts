@@ -9,7 +9,238 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      achievements: {
+        Row: {
+          badge_url: string | null
+          created_at: string | null
+          criteria: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          badge_url?: string | null
+          created_at?: string | null
+          criteria?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          badge_url?: string | null
+          created_at?: string | null
+          criteria?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      agent_achievements: {
+        Row: {
+          achievement_id: string
+          agent_id: string
+          awarded_at: string | null
+          id: string
+        }
+        Insert: {
+          achievement_id: string
+          agent_id: string
+          awarded_at?: string | null
+          id?: string
+        }
+        Update: {
+          achievement_id?: string
+          agent_id?: string
+          awarded_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_training_progress: {
+        Row: {
+          agent_id: string
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          module_id: string
+          score: number | null
+          status: string
+        }
+        Insert: {
+          agent_id: string
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          module_id: string
+          score?: number | null
+          status: string
+        }
+        Update: {
+          agent_id?: string
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          module_id?: string
+          score?: number | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_training_progress_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "training_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      qa_criteria: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          id: string
+          max_score: number
+          name: string
+          weight: number
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          max_score: number
+          name: string
+          weight: number
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          max_score?: number
+          name?: string
+          weight?: number
+        }
+        Relationships: []
+      }
+      qa_evaluations: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          evaluation_date: string
+          evaluator_id: string
+          feedback: string | null
+          id: string
+          interaction_id: string | null
+          interaction_type: string
+          total_score: number
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          evaluation_date: string
+          evaluator_id: string
+          feedback?: string | null
+          id?: string
+          interaction_id?: string | null
+          interaction_type: string
+          total_score: number
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          evaluation_date?: string
+          evaluator_id?: string
+          feedback?: string | null
+          id?: string
+          interaction_id?: string | null
+          interaction_type?: string
+          total_score?: number
+        }
+        Relationships: []
+      }
+      qa_scores: {
+        Row: {
+          comment: string | null
+          created_at: string | null
+          criteria_id: string
+          evaluation_id: string
+          id: string
+          score: number
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string | null
+          criteria_id: string
+          evaluation_id: string
+          id?: string
+          score: number
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string | null
+          criteria_id?: string
+          evaluation_id?: string
+          id?: string
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qa_scores_criteria_id_fkey"
+            columns: ["criteria_id"]
+            isOneToOne: false
+            referencedRelation: "qa_criteria"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "qa_scores_evaluation_id_fkey"
+            columns: ["evaluation_id"]
+            isOneToOne: false
+            referencedRelation: "qa_evaluations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_modules: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          duration: number
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          duration: number
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          duration?: number
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
