@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,15 +16,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface AgentTicket {
-  id: string;
-  agent_id: string;
+interface BaseAgentTicket {
   email: string;
   team_lead_group: string;
   group: string;
   shift_type: string;
   shift_status: string;
-  date: string;
   helpdesk_tickets?: number;
   calls?: number;
   live_chat?: number;
@@ -39,9 +35,15 @@ interface AgentTicket {
   comment?: string;
 }
 
-type NewAgentTicket = Omit<AgentTicket, 'id'>;
+interface AgentTicket extends BaseAgentTicket {
+  id: string;
+  agent_id: string;
+  date: string;
+}
 
-const defaultTicket: Partial<NewAgentTicket> = {
+type NewAgentTicket = BaseAgentTicket;
+
+const defaultTicket: NewAgentTicket = {
   email: "",
   team_lead_group: "",
   group: "",
@@ -60,7 +62,7 @@ const defaultTicket: Partial<NewAgentTicket> = {
 };
 
 const AgentTickets = () => {
-  const [formData, setFormData] = useState<Partial<NewAgentTicket>>(defaultTicket);
+  const [formData, setFormData] = useState<NewAgentTicket>(defaultTicket);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -78,21 +80,20 @@ const AgentTickets = () => {
   });
 
   const createTicketMutation = useMutation({
-    mutationFn: async (newTicket: Partial<NewAgentTicket>) => {
-      // Get the current user's ID
+    mutationFn: async (newTicket: NewAgentTicket) => {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
       if (!user) throw new Error("No authenticated user");
 
-      const ticketWithAgentId = {
+      const ticketWithMetadata = {
         ...newTicket,
         agent_id: user.id,
-        date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+        date: new Date().toISOString().split('T')[0],
       };
 
       const { data, error } = await supabase
         .from('agent_tickets')
-        .insert(ticketWithAgentId)
+        .insert(ticketWithMetadata)
         .select()
         .single();
 
@@ -121,7 +122,7 @@ const AgentTickets = () => {
     createTicketMutation.mutate(formData);
   };
 
-  const handleInputChange = (field: keyof AgentTicket, value: string | number) => {
+  const handleInputChange = (field: keyof NewAgentTicket, value: string | number) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
