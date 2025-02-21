@@ -74,13 +74,13 @@ const Recognition = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {achievements?.map((achievement) => (
-            <Card key={achievement.id} className={achievement.awarded_at ? 'border-success-200' : ''}>
+            <Card key={achievement.id} className={achievement.awarded_at ? 'border-green-200' : ''}>
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <CardTitle className="flex items-center gap-2">
                     {achievement.name}
                     {achievement.awarded_at && (
-                      <Badge variant="success" className="ml-2">Achieved</Badge>
+                      <Badge variant="secondary" className="ml-2">Achieved</Badge>
                     )}
                   </CardTitle>
                 </div>
@@ -99,7 +99,7 @@ const Recognition = () => {
                     <strong>Criteria:</strong> {achievement.criteria}
                   </p>
                   {achievement.awarded_at && (
-                    <p className="text-sm text-success-600">
+                    <p className="text-sm text-green-600">
                       Awarded on {new Date(achievement.awarded_at).toLocaleDateString()}
                     </p>
                   )}
