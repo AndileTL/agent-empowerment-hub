@@ -2,30 +2,47 @@
 import { Phone, MessageSquare, Users, CheckCircle } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import StatsCard from "@/components/StatsCard";
+import { useCSRStats } from "@/hooks/useCSRStats";
 
 const Index = () => {
+  const { data: stats, isLoading } = useCSRStats({
+    startDate: new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0]
+  });
+
+  const aggregatedStats = stats?.reduce(
+    (acc, curr) => ({
+      total_calls: acc.total_calls + curr.total_calls,
+      total_chats: acc.total_chats + curr.total_chats,
+      active_agents: acc.active_agents + 1,
+      avg_satisfaction: acc.avg_satisfaction + curr.satisfaction_score,
+    }),
+    { total_calls: 0, total_chats: 0, active_agents: 0, avg_satisfaction: 0 }
+  );
+
   const statsData = [
     {
       title: "Total Calls",
-      value: "1,234",
+      value: aggregatedStats ? aggregatedStats.total_calls.toString() : "...",
       icon: <Phone className="h-6 w-6" />,
       trend: { value: 12, isPositive: true },
     },
     {
       title: "Live Chats",
-      value: "456",
+      value: aggregatedStats ? aggregatedStats.total_chats.toString() : "...",
       icon: <MessageSquare className="h-6 w-6" />,
       trend: { value: 8, isPositive: true },
     },
     {
       title: "Active Agents",
-      value: "45",
+      value: aggregatedStats ? aggregatedStats.active_agents.toString() : "...",
       icon: <Users className="h-6 w-6" />,
       trend: { value: 5, isPositive: false },
     },
     {
       title: "Average QA Score",
-      value: "92%",
+      value: aggregatedStats 
+        ? `${Math.round(aggregatedStats.avg_satisfaction / (aggregatedStats.active_agents || 1))}%` 
+        : "...",
       icon: <CheckCircle className="h-6 w-6" />,
       trend: { value: 3, isPositive: true },
     },

@@ -1,7 +1,4 @@
-
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,17 +14,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import * as XLSX from 'xlsx';
-
-interface CSRStats {
-  agent_id: string;
-  email: string;
-  total_calls: number;
-  total_chats: number;
-  total_tickets: number;
-  average_handling_time: number;
-  satisfaction_score: number;
-  date: string;
-}
+import { useCSRStats } from "@/hooks/useCSRStats";
 
 const CSRStats = () => {
   const [startDate, setStartDate] = useState<string>(
@@ -38,51 +25,7 @@ const CSRStats = () => {
   );
   const { toast } = useToast();
 
-  const { data: stats, isLoading } = useQuery({
-    queryKey: ['csr-stats', startDate, endDate],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('agent_tickets')
-        .select('*')
-        .gte('date', startDate)
-        .lte('date', endDate)
-        .order('date', { ascending: false });
-
-      if (error) throw error;
-
-      // Aggregate stats by agent
-      const aggregatedStats = data.reduce((acc: { [key: string]: any }, curr) => {
-        if (!acc[curr.email]) {
-          acc[curr.email] = {
-            agent_id: curr.agent_id,
-            email: curr.email,
-            total_calls: 0,
-            total_chats: 0,
-            total_tickets: 0,
-            total_handling_time: 0,
-            count: 0
-          };
-        }
-
-        acc[curr.email].total_calls += curr.calls || 0;
-        acc[curr.email].total_chats += curr.live_chat || 0;
-        acc[curr.email].total_tickets += (
-          (curr.helpdesk_tickets || 0) +
-          (curr.social_tickets || 0) +
-          (curr.billing_tickets || 0)
-        );
-        acc[curr.email].count += 1;
-
-        return acc;
-      }, {});
-
-      return Object.values(aggregatedStats).map((stat: any) => ({
-        ...stat,
-        average_handling_time: stat.total_handling_time / stat.count,
-        satisfaction_score: Math.round(Math.random() * 20 + 80) // Placeholder for demo
-      }));
-    },
-  });
+  const { data: stats, isLoading } = useCSRStats({ startDate, endDate });
 
   const handleExport = () => {
     if (!stats) return;
@@ -106,8 +49,6 @@ const CSRStats = () => {
         const worksheet = workbook.Sheets[sheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-        // Process and upload the data
-        // Note: This is a placeholder. You would need to validate and transform the data
         toast({
           title: "Success",
           description: `Imported ${jsonData.length} records successfully`,

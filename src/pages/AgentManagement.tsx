@@ -7,68 +7,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import AgentCard from "@/components/AgentCard";
 import AgentStatusPie from "@/components/AgentStatusPie";
+import { useCSRStats } from "@/hooks/useCSRStats";
 
 const AgentManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Mock data - would come from backend in real implementation
-  const agents = [
-    {
-      id: 1,
-      name: "John Smith",
-      avatar: "/placeholder.svg",
-      role: "Senior Agent",
-      status: "online" as const,
-      performance: {
-        callsHandled: 145,
-        satisfaction: 98,
-        avgHandleTime: "5:23",
-      },
-      metrics: {
-        daily: 92,
-        weekly: 89,
-        monthly: 94,
-      },
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      avatar: "/placeholder.svg",
-      role: "Customer Service Agent",
-      status: "busy" as const,
-      performance: {
-        callsHandled: 128,
-        satisfaction: 96,
-        avgHandleTime: "6:12",
-      },
-      metrics: {
-        daily: 88,
-        weekly: 92,
-        monthly: 90,
-      },
-    },
-    {
-      id: 3,
-      name: "Michael Brown",
-      avatar: "/placeholder.svg",
-      role: "Technical Support",
-      status: "offline" as const,
-      performance: {
-        callsHandled: 98,
-        satisfaction: 94,
-        avgHandleTime: "8:45",
-      },
-      metrics: {
-        daily: 85,
-        weekly: 87,
-        monthly: 86,
-      },
-    },
-  ];
+  const { data: agentStats } = useCSRStats();
 
-  const filteredAgents = agents.filter(agent =>
-    agent.name.toLowerCase().includes(searchQuery.toLowerCase())
+  // Filter agents based on search query
+  const filteredAgents = agentStats?.filter(agent =>
+    agent.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -102,9 +51,27 @@ const AgentManagement = () => {
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              {filteredAgents.map((agent) => (
-                <div key={agent.id} onClick={() => navigate(`/agents/${agent.id}`)} className="cursor-pointer">
-                  <AgentCard agent={agent} />
+              {filteredAgents?.map((agent) => (
+                <div key={agent.agent_id} onClick={() => navigate(`/agents/${agent.agent_id}`)} className="cursor-pointer">
+                  <AgentCard
+                    agent={{
+                      id: agent.agent_id,
+                      name: agent.email,
+                      avatar: "/placeholder.svg",
+                      role: "Customer Service Agent",
+                      status: "online",
+                      performance: {
+                        callsHandled: agent.total_calls,
+                        satisfaction: agent.satisfaction_score,
+                        avgHandleTime: agent.average_handling_time.toFixed(2),
+                      },
+                      metrics: {
+                        daily: Math.round(agent.total_calls / 30), // Simplified average
+                        weekly: Math.round(agent.total_chats / 4), // Simplified average
+                        monthly: agent.total_tickets,
+                      },
+                    }}
+                  />
                 </div>
               ))}
             </div>
@@ -127,15 +94,31 @@ const AgentManagement = () => {
               <div className="space-y-4">
                 <div>
                   <p className="text-sm text-gray-600">Average Satisfaction</p>
-                  <p className="text-2xl font-semibold text-success-600">94%</p>
+                  <p className="text-2xl font-semibold text-success-600">
+                    {agentStats 
+                      ? `${Math.round(
+                          agentStats.reduce((acc, curr) => acc + curr.satisfaction_score, 0) / 
+                          agentStats.length
+                        )}%`
+                      : "..."}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Average Handle Time</p>
-                  <p className="text-2xl font-semibold">6:45</p>
+                  <p className="text-2xl font-semibold">
+                    {agentStats
+                      ? `${Math.round(
+                          agentStats.reduce((acc, curr) => acc + curr.average_handling_time, 0) / 
+                          agentStats.length
+                        )}m`
+                      : "..."}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Active Agents</p>
-                  <p className="text-2xl font-semibold">36</p>
+                  <p className="text-2xl font-semibold">
+                    {agentStats?.length || "..."}
+                  </p>
                 </div>
               </div>
             </div>
