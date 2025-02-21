@@ -52,7 +52,7 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
             total_tickets: 0,
             total_handling_time: 0,
             count: 0,
-            dates: new Set()
+            dates: new Set(),
           };
         }
 
