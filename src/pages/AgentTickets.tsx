@@ -19,26 +19,29 @@ import {
 
 interface AgentTicket {
   id: string;
+  agent_id: string;
   email: string;
   team_lead_group: string;
   group: string;
   shift_type: string;
   shift_status: string;
   date: string;
-  helpdesk_tickets: number;
-  calls: number;
-  live_chat: number;
-  support_dns_emails: number;
-  social_tickets: number;
-  billing_tickets: number;
-  walk_ins: number;
-  total_issues_handled: number;
-  ticket_to_calls: number;
-  call_classification: string;
-  comment: string;
+  helpdesk_tickets?: number;
+  calls?: number;
+  live_chat?: number;
+  support_dns_emails?: number;
+  social_tickets?: number;
+  billing_tickets?: number;
+  walk_ins?: number;
+  total_issues_handled?: number;
+  ticket_to_calls?: number;
+  call_classification?: string;
+  comment?: string;
 }
 
-const defaultTicket: Partial<AgentTicket> = {
+type NewAgentTicket = Omit<AgentTicket, 'id'>;
+
+const defaultTicket: Partial<NewAgentTicket> = {
   email: "",
   team_lead_group: "",
   group: "",
@@ -57,7 +60,7 @@ const defaultTicket: Partial<AgentTicket> = {
 };
 
 const AgentTickets = () => {
-  const [formData, setFormData] = useState<Partial<AgentTicket>>(defaultTicket);
+  const [formData, setFormData] = useState<Partial<NewAgentTicket>>(defaultTicket);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -70,15 +73,26 @@ const AgentTickets = () => {
         .order('date', { ascending: false });
       
       if (error) throw error;
-      return data;
+      return data as AgentTicket[];
     },
   });
 
   const createTicketMutation = useMutation({
-    mutationFn: async (newTicket: Partial<AgentTicket>) => {
+    mutationFn: async (newTicket: Partial<NewAgentTicket>) => {
+      // Get the current user's ID
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      if (!user) throw new Error("No authenticated user");
+
+      const ticketWithAgentId = {
+        ...newTicket,
+        agent_id: user.id,
+        date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+      };
+
       const { data, error } = await supabase
         .from('agent_tickets')
-        .insert([newTicket])
+        .insert(ticketWithAgentId)
         .select()
         .single();
 
