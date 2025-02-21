@@ -65,6 +65,75 @@ export type Database = {
           },
         ]
       }
+      agent_tickets: {
+        Row: {
+          agent_id: string
+          billing_tickets: number | null
+          call_classification: string | null
+          calls: number | null
+          comment: string | null
+          created_at: string | null
+          date: string
+          email: string
+          group: string
+          helpdesk_tickets: number | null
+          id: string
+          live_chat: number | null
+          shift_status: string
+          shift_type: string
+          social_tickets: number | null
+          support_dns_emails: number | null
+          team_lead_group: string
+          ticket_to_calls: number | null
+          total_issues_handled: number | null
+          walk_ins: number | null
+        }
+        Insert: {
+          agent_id: string
+          billing_tickets?: number | null
+          call_classification?: string | null
+          calls?: number | null
+          comment?: string | null
+          created_at?: string | null
+          date?: string
+          email: string
+          group: string
+          helpdesk_tickets?: number | null
+          id?: string
+          live_chat?: number | null
+          shift_status: string
+          shift_type: string
+          social_tickets?: number | null
+          support_dns_emails?: number | null
+          team_lead_group: string
+          ticket_to_calls?: number | null
+          total_issues_handled?: number | null
+          walk_ins?: number | null
+        }
+        Update: {
+          agent_id?: string
+          billing_tickets?: number | null
+          call_classification?: string | null
+          calls?: number | null
+          comment?: string | null
+          created_at?: string | null
+          date?: string
+          email?: string
+          group?: string
+          helpdesk_tickets?: number | null
+          id?: string
+          live_chat?: number | null
+          shift_status?: string
+          shift_type?: string
+          social_tickets?: number | null
+          support_dns_emails?: number | null
+          team_lead_group?: string
+          ticket_to_calls?: number | null
+          total_issues_handled?: number | null
+          walk_ins?: number | null
+        }
+        Relationships: []
+      }
       agent_training_progress: {
         Row: {
           agent_id: string
