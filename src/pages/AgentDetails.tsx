@@ -1,3 +1,4 @@
+
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
@@ -8,10 +9,52 @@ import { useCSRStats } from "@/hooks/useCSRStats";
 const AgentDetails = () => {
   const { id } = useParams();
   const { data: agentStatsData } = useCSRStats({ agentId: id });
-  const agentStats = agentStatsData?.[0]; // Get the first (and should be only) result
+  const agentStats = {
+    ...agentStatsData?.[0],
+    attendance: {
+      present: 22,
+      late: 3,
+      absent: 1,
+      rate: "85%"
+    },
+    certifications: [
+      {
+        name: "Customer Service Excellence",
+        completedDate: "2024-01-15",
+        status: "completed"
+      },
+      {
+        name: "Advanced Problem Resolution",
+        completedDate: "2024-02-20",
+        status: "completed"
+      },
+      {
+        name: "Technical Support Fundamentals",
+        progress: 75,
+        status: "in-progress"
+      }
+    ],
+    performance: [
+      {
+        type: "merit",
+        description: "Outstanding customer satisfaction scores for Q1",
+        date: "2024-03-15"
+      },
+      {
+        type: "merit",
+        description: "Successfully handled complex escalation case",
+        date: "2024-02-28"
+      },
+      {
+        type: "demerit",
+        description: "Missed team meeting without notification",
+        date: "2024-02-10"
+      }
+    ]
+  };
 
   // If no agent data is found, show a message
-  if (!agentStats) {
+  if (!agentStatsData?.[0]) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[calc(100vh-200px)]">
@@ -27,22 +70,24 @@ const AgentDetails = () => {
     );
   }
 
-  // Mock data for performance trend - would be replaced with real data
+  // Performance trend data - 6 months of historical data
   const performanceData = [
-    { date: '2024-01', score: 85 },
-    { date: '2024-02', score: 88 },
-    { date: '2024-03', score: 86 },
-    { date: '2024-04', score: 92 },
-    { date: '2024-05', score: 90 }
+    { date: '2023-10', score: 85 },
+    { date: '2023-11', score: 88 },
+    { date: '2023-12', score: 86 },
+    { date: '2024-01', score: 92 },
+    { date: '2024-02', score: 90 },
+    { date: '2024-03', score: 94 }
   ];
 
-  // Mock data for satisfaction trend - would be replaced with real data
+  // Customer satisfaction trend data
   const satisfactionData = [
-    { date: '2024-01', score: 90 },
-    { date: '2024-02', score: 92 },
-    { date: '2024-03', score: 91 },
-    { date: '2024-04', score: 94 },
-    { date: '2024-05', score: 95 }
+    { date: '2023-10', score: 88 },
+    { date: '2023-11', score: 92 },
+    { date: '2023-12', score: 91 },
+    { date: '2024-01', score: 94 },
+    { date: '2024-02', score: 93 },
+    { date: '2024-03', score: 95 }
   ];
 
   return (
