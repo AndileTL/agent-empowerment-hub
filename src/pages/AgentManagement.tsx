@@ -1,24 +1,89 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Filter, Plus } from "lucide-react";
+import { Search, Filter, Plus, X } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import AgentCard from "@/components/AgentCard";
 import AgentStatusPie from "@/components/AgentStatusPie";
 import { useCSRStats } from "@/hooks/useCSRStats";
+import { supabase } from "@/integrations/supabase/client";
 
 const AgentManagement = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newAgent, setNewAgent] = useState({
+    email: "",
+    group: "",
+    shift_type: "",
+    team_lead_group: "",
+  });
+  const { toast } = useToast();
 
-  const { data: agentStats } = useCSRStats();
+  const { data: agentStats, refetch } = useCSRStats();
 
   // Filter agents based on search query
   const filteredAgents = agentStats?.filter(agent =>
     agent.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  const handleAddAgent = async () => {
+    try {
+      // Generate a UUID for the agent_id
+      const agent_id = crypto.randomUUID();
+
+      const { error } = await supabase
+        .from('agent_tickets')
+        .insert([
+          {
+            agent_id,
+            email: newAgent.email,
+            group: newAgent.group,
+            shift_type: newAgent.shift_type,
+            team_lead_group: newAgent.team_lead_group,
+            shift_status: 'active',
+            calls: 0,
+            live_chat: 0,
+            helpdesk_tickets: 0,
+            social_tickets: 0,
+            billing_tickets: 0,
+            walk_ins: 0,
+            total_issues_handled: 0,
+          }
+        ]);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Agent has been added successfully",
+      });
+
+      // Reset form and close dialog
+      setNewAgent({
+        email: "",
+        group: "",
+        shift_type: "",
+        team_lead_group: "",
+      });
+      setIsAddDialogOpen(false);
+
+      // Refresh the agents list
+      refetch();
+    } catch (error) {
+      console.error('Error adding agent:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add agent. Please try again.",
+      });
+    }
+  };
 
   return (
     <DashboardLayout>
@@ -28,7 +93,7 @@ const AgentManagement = () => {
             <h1 className="text-3xl font-bold text-gray-900">Agent Management</h1>
             <p className="mt-2 text-gray-600">Manage and monitor agent performance</p>
           </div>
-          <Button>
+          <Button onClick={() => setIsAddDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Add New Agent
           </Button>
         </div>
@@ -124,6 +189,64 @@ const AgentManagement = () => {
             </div>
           </div>
         </div>
+
+        <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add New Agent</DialogTitle>
+              <DialogDescription>
+                Enter the details of the new agent below.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={newAgent.email}
+                  onChange={(e) => setNewAgent({ ...newAgent, email: e.target.value })}
+                  placeholder="agent@example.com"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="group">Group</Label>
+                <Input
+                  id="group"
+                  value={newAgent.group}
+                  onChange={(e) => setNewAgent({ ...newAgent, group: e.target.value })}
+                  placeholder="Support Group"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="shift_type">Shift Type</Label>
+                <Input
+                  id="shift_type"
+                  value={newAgent.shift_type}
+                  onChange={(e) => setNewAgent({ ...newAgent, shift_type: e.target.value })}
+                  placeholder="Day/Night/Flex"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="team_lead_group">Team Lead Group</Label>
+                <Input
+                  id="team_lead_group"
+                  value={newAgent.team_lead_group}
+                  onChange={(e) => setNewAgent({ ...newAgent, team_lead_group: e.target.value })}
+                  placeholder="Team Lead Group"
+                />
+              </div>
+            </div>
+            <div className="flex justify-end gap-4">
+              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                Cancel
+              </Button>
+              <Button onClick={handleAddAgent}>
+                Add Agent
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
