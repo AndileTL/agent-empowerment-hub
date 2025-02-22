@@ -79,6 +79,7 @@ export type Database = {
           helpdesk_tickets: number | null
           id: string
           live_chat: number | null
+          name: string | null
           shift_status: string
           shift_type: string
           social_tickets: number | null
@@ -101,6 +102,7 @@ export type Database = {
           helpdesk_tickets?: number | null
           id?: string
           live_chat?: number | null
+          name?: string | null
           shift_status: string
           shift_type: string
           social_tickets?: number | null
@@ -123,6 +125,7 @@ export type Database = {
           helpdesk_tickets?: number | null
           id?: string
           live_chat?: number | null
+          name?: string | null
           shift_status?: string
           shift_type?: string
           social_tickets?: number | null
