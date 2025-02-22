@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Filter, Plus, X } from "lucide-react";
+import { Search, Filter, Plus } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +26,6 @@ const AgentManagement = () => {
     team_lead_group: "",
   });
   const { toast } = useToast();
-
   const { data: agentStats, refetch } = useCSRStats();
 
   const shiftTypes = [
@@ -51,37 +50,37 @@ const AgentManagement = () => {
         return;
       }
 
-      // First, check if this email already exists in agent_tickets
-      const { data: existingAgent } = await supabase
-        .from('agent_tickets')
-        .select('email')
-        .eq('email', newAgent.email)
+      // First, create a user entry
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .insert([{ email: newAgent.email }])
+        .select()
         .single();
 
-      if (existingAgent) {
+      if (userError) {
+        console.error('Error creating user:', userError);
         toast({
           variant: "destructive",
           title: "Error",
-          description: "An agent with this email already exists.",
+          description: userError.message === 'duplicate key value violates unique constraint "users_email_key"'
+            ? "An agent with this email already exists."
+            : "Failed to create user. Please try again.",
         });
         return;
       }
 
-      // Generate a UUID for the agent_id
-      const agent_id = crypto.randomUUID();
-
-      // Insert new agent record
-      const { error } = await supabase
+      // Then create the agent ticket using the new user's ID
+      const { error: agentError } = await supabase
         .from('agent_tickets')
         .insert({
-          agent_id,
+          agent_id: userData.id,
           name: newAgent.name,
           email: newAgent.email,
           group: newAgent.group,
           shift_type: newAgent.shift_type,
           team_lead_group: newAgent.team_lead_group,
           shift_status: 'active',
-          date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+          date: new Date().toISOString().split('T')[0],
           calls: 0,
           live_chat: 0,
           helpdesk_tickets: 0,
@@ -91,7 +90,21 @@ const AgentManagement = () => {
           total_issues_handled: 0,
         });
 
-      if (error) throw error;
+      if (agentError) {
+        console.error('Error creating agent ticket:', agentError);
+        // Clean up the user entry if agent ticket creation fails
+        await supabase
+          .from('users')
+          .delete()
+          .eq('id', userData.id);
+
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to create agent ticket. Please try again.",
+        });
+        return;
+      }
 
       toast({
         title: "Success",
@@ -166,8 +179,8 @@ const AgentManagement = () => {
                         avgHandleTime: agent.average_handling_time.toFixed(2),
                       },
                       metrics: {
-                        daily: Math.round(agent.total_calls / 30), // Simplified average
-                        weekly: Math.round(agent.total_chats / 4), // Simplified average
+                        daily: Math.round(agent.total_calls / 30),
+                        weekly: Math.round(agent.total_chats / 4),
                         monthly: agent.total_tickets,
                       },
                     }}

@@ -135,7 +135,15 @@ export type Database = {
           total_issues_handled?: number | null
           walk_ins?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "agent_tickets_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       agent_training_progress: {
         Row: {
@@ -444,6 +452,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      users: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
