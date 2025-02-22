@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import AgentCard from "@/components/AgentCard";
 import AgentStatusPie from "@/components/AgentStatusPie";
@@ -18,6 +19,7 @@ const AgentManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newAgent, setNewAgent] = useState({
+    name: "",
     email: "",
     group: "",
     shift_type: "",
@@ -27,6 +29,12 @@ const AgentManagement = () => {
 
   const { data: agentStats, refetch } = useCSRStats();
 
+  const shiftTypes = [
+    { value: "day", label: "Day Shift" },
+    { value: "night", label: "Night Shift" },
+    { value: "flex", label: "Flex Shift" },
+  ];
+
   // Filter agents based on search query
   const filteredAgents = agentStats?.filter(agent =>
     agent.email.toLowerCase().includes(searchQuery.toLowerCase())
@@ -34,6 +42,15 @@ const AgentManagement = () => {
 
   const handleAddAgent = async () => {
     try {
+      if (!newAgent.name || !newAgent.email || !newAgent.group || !newAgent.shift_type || !newAgent.team_lead_group) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please fill in all required fields.",
+        });
+        return;
+      }
+
       // First, check if this email already exists in agent_tickets
       const { data: existingAgent } = await supabase
         .from('agent_tickets')
@@ -58,6 +75,7 @@ const AgentManagement = () => {
         .from('agent_tickets')
         .insert({
           agent_id,
+          name: newAgent.name,
           email: newAgent.email,
           group: newAgent.group,
           shift_type: newAgent.shift_type,
@@ -82,6 +100,7 @@ const AgentManagement = () => {
 
       // Reset form and close dialog
       setNewAgent({
+        name: "",
         email: "",
         group: "",
         shift_type: "",
@@ -216,6 +235,15 @@ const AgentManagement = () => {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
+                <Label htmlFor="name">Agent Name</Label>
+                <Input
+                  id="name"
+                  value={newAgent.name}
+                  onChange={(e) => setNewAgent({ ...newAgent, name: e.target.value })}
+                  placeholder="John Doe"
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -236,12 +264,21 @@ const AgentManagement = () => {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="shift_type">Shift Type</Label>
-                <Input
-                  id="shift_type"
+                <Select
                   value={newAgent.shift_type}
-                  onChange={(e) => setNewAgent({ ...newAgent, shift_type: e.target.value })}
-                  placeholder="Day/Night/Flex"
-                />
+                  onValueChange={(value) => setNewAgent({ ...newAgent, shift_type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select shift type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {shiftTypes.map((shift) => (
+                      <SelectItem key={shift.value} value={shift.value}>
+                        {shift.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="team_lead_group">Team Lead Group</Label>
