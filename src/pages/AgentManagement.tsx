@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import AgentCard from "@/components/AgentCard";
 import AgentStatusPie from "@/components/AgentStatusPie";
 import { useCSRStats } from "@/hooks/useCSRStats";
@@ -34,19 +34,33 @@ const AgentManagement = () => {
 
   const handleAddAgent = async () => {
     try {
-      // Generate a UUID for the agent_id
-      const agent_id = crypto.randomUUID();
+      // First, check if this email already exists in agent_tickets
+      const { data: existingAgent } = await supabase
+        .from('agent_tickets')
+        .select('email')
+        .eq('email', newAgent.email)
+        .single();
 
+      if (existingAgent) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "An agent with this email already exists.",
+        });
+        return;
+      }
+
+      // Insert new agent record
       const { error } = await supabase
         .from('agent_tickets')
         .insert([
           {
-            agent_id,
             email: newAgent.email,
             group: newAgent.group,
             shift_type: newAgent.shift_type,
             team_lead_group: newAgent.team_lead_group,
             shift_status: 'active',
+            date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
             calls: 0,
             live_chat: 0,
             helpdesk_tickets: 0,
