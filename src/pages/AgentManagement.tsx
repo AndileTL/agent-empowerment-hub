@@ -50,26 +50,28 @@ const AgentManagement = () => {
         return;
       }
 
+      // Generate a UUID for the agent_id
+      const agent_id = crypto.randomUUID();
+
       // Insert new agent record
       const { error } = await supabase
         .from('agent_tickets')
-        .insert([
-          {
-            email: newAgent.email,
-            group: newAgent.group,
-            shift_type: newAgent.shift_type,
-            team_lead_group: newAgent.team_lead_group,
-            shift_status: 'active',
-            date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
-            calls: 0,
-            live_chat: 0,
-            helpdesk_tickets: 0,
-            social_tickets: 0,
-            billing_tickets: 0,
-            walk_ins: 0,
-            total_issues_handled: 0,
-          }
-        ]);
+        .insert({
+          agent_id,
+          email: newAgent.email,
+          group: newAgent.group,
+          shift_type: newAgent.shift_type,
+          team_lead_group: newAgent.team_lead_group,
+          shift_status: 'active',
+          date: new Date().toISOString().split('T')[0], // Current date in YYYY-MM-DD format
+          calls: 0,
+          live_chat: 0,
+          helpdesk_tickets: 0,
+          social_tickets: 0,
+          billing_tickets: 0,
+          walk_ins: 0,
+          total_issues_handled: 0,
+        });
 
       if (error) throw error;
 
