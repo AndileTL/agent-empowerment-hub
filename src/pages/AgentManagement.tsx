@@ -9,6 +9,7 @@ import AgentStatusPie from "@/components/AgentStatusPie";
 import QuickStats from "@/components/stats/QuickStats";
 import AgentsList from "@/components/agents/AgentsList";
 import { AddAgentForm } from "@/components/forms/AddAgentForm";
+import CallCenterMetrics from "@/components/dashboard/CallCenterMetrics";
 
 const AgentManagement = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -16,7 +17,6 @@ const AgentManagement = () => {
 
   const handleAddSuccess = () => {
     setIsAddDialogOpen(false);
-    // We don't need to call mutate here as it will be handled by the AddAgentForm component
   };
 
   return (
@@ -24,13 +24,15 @@ const AgentManagement = () => {
       <div className="space-y-8 animate-fade-in">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Agent Management</h1>
-            <p className="mt-2 text-gray-600">Manage and monitor agent performance</p>
+            <h1 className="text-3xl font-bold text-gray-900">Call Center Dashboard</h1>
+            <p className="mt-2 text-gray-600">Real-time performance metrics and agent management</p>
           </div>
           <Button onClick={() => setIsAddDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Add New Agent
           </Button>
         </div>
+
+        <CallCenterMetrics agentStats={agentStats} />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <AgentsList agents={agentStats} />
