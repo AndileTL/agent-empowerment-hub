@@ -59,14 +59,20 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
     },
   });
 
-  const mutate = async (updates: Partial<CSRStatsData> & { agent_id: string; email: string; group: string }) => {
+  const mutate = async (updates: Partial<CSRStatsData>) => {
+    // Ensure required fields are present with default values if needed
+    const payload = {
+      ...updates,
+      date: updates.date || new Date().toISOString().split('T')[0],
+      shift_type: updates.shift_type || 'day',
+      shift_status: updates.shift_status || 'active',
+      team_lead_group: updates.team_lead_group || 'default',
+      group: updates.group || 'default'
+    };
+
     const { data, error } = await supabase
       .from('agent_tickets')
-      .upsert({
-        ...updates,
-        shift_status: updates.shift_status || 'active',
-        team_lead_group: updates.team_lead_group || 'default'
-      })
+      .upsert(payload)
       .select();
 
     if (error) throw error;

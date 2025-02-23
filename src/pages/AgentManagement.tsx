@@ -16,7 +16,7 @@ const AgentManagement = () => {
 
   const handleAddSuccess = () => {
     setIsAddDialogOpen(false);
-    mutate({});
+    // We don't need to call mutate here as it will be handled by the AddAgentForm component
   };
 
   return (
