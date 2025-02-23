@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -222,7 +221,7 @@ const CSRStats = () => {
                                 </Button>
                               )}
                             </TableCell>
-                            <TableCell>{stat.email}</TableCell>
+                            <TableCell>{stat.name || stat.email}</TableCell>
                             <TableCell>{stat.group}</TableCell>
                             <TableCell>{stat.shift_type}</TableCell>
                             <TableCell>
@@ -247,7 +246,7 @@ const CSRStats = () => {
                             <TableCell>{stat.billing_tickets}</TableCell>
                             <TableCell>{stat.walk_ins}</TableCell>
                             <TableCell>{stat.total_issues_handled}</TableCell>
-                            <TableCell>{stat.satisfaction_score}%</TableCell>
+                            <TableCell>N/A</TableCell>
                           </TableRow>
                         ))}
                       </TableBody>

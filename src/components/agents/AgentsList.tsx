@@ -17,7 +17,7 @@ const AgentsList = ({ agents }: AgentsListProps) => {
 
   // Filter agents based on search query
   const filteredAgents = agents?.filter(agent =>
-    agent.email.toLowerCase().includes(searchQuery.toLowerCase())
+    (agent.name || agent.email).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
@@ -42,20 +42,20 @@ const AgentsList = ({ agents }: AgentsListProps) => {
           <div key={agent.agent_id} onClick={() => navigate(`/agents/${agent.agent_id}`)} className="cursor-pointer">
             <AgentCard
               agent={{
-                id: agent.agent_id, // Now correctly passing string ID
-                name: agent.email,
+                id: agent.agent_id,
+                name: agent.name || agent.email,
                 avatar: "/placeholder.svg",
                 role: "Customer Service Agent",
-                status: "online",
+                status: agent.shift_status as "online" | "busy" | "offline",
                 performance: {
-                  callsHandled: agent.total_calls,
-                  satisfaction: agent.satisfaction_score,
-                  avgHandleTime: agent.average_handling_time.toFixed(2),
+                  callsHandled: agent.calls || 0,
+                  satisfaction: 0, // Default value since we don't have this in our data
+                  avgHandleTime: "0", // Default value since we don't have this in our data
                 },
                 metrics: {
-                  daily: Math.round(agent.total_calls / 30),
-                  weekly: Math.round(agent.total_chats / 4),
-                  monthly: agent.total_tickets,
+                  daily: agent.calls || 0,
+                  weekly: agent.live_chat || 0,
+                  monthly: agent.helpdesk_tickets || 0,
                 },
               }}
             />

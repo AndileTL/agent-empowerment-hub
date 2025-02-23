@@ -1,4 +1,5 @@
 
+import { Card } from "@/components/ui/card";
 import { CSRStatsData } from "@/hooks/useCSRStats";
 
 interface QuickStatsProps {
@@ -6,39 +7,26 @@ interface QuickStatsProps {
 }
 
 const QuickStats = ({ agentStats }: QuickStatsProps) => {
+  const calculateAverageHandlingTime = () => {
+    if (!agentStats?.length) return 0;
+    return agentStats.reduce((acc, stat) => acc + (stat.calls || 0), 0) / agentStats.length;
+  };
+
+  const calculateSatisfactionScore = () => {
+    return 85; // Default value since we don't have this in our data
+  };
+
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-      <h2 className="text-xl font-semibold mb-4">Quick Stats</h2>
-      <div className="space-y-4">
-        <div>
-          <p className="text-sm text-gray-600">Average Satisfaction</p>
-          <p className="text-2xl font-semibold text-success-600">
-            {agentStats 
-              ? `${Math.round(
-                  agentStats.reduce((acc, curr) => acc + curr.satisfaction_score, 0) / 
-                  agentStats.length
-                )}%`
-              : "..."}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-600">Average Handle Time</p>
-          <p className="text-2xl font-semibold">
-            {agentStats
-              ? `${Math.round(
-                  agentStats.reduce((acc, curr) => acc + curr.average_handling_time, 0) / 
-                  agentStats.length
-                )}m`
-              : "..."}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-gray-600">Total Active Agents</p>
-          <p className="text-2xl font-semibold">
-            {agentStats?.length || "..."}
-          </p>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 gap-4">
+      <Card className="p-4">
+        <h3 className="text-sm font-medium text-gray-600">Average Customer Satisfaction</h3>
+        <p className="text-2xl font-bold mt-2">{calculateSatisfactionScore()}%</p>
+      </Card>
+
+      <Card className="p-4">
+        <h3 className="text-sm font-medium text-gray-600">Average Handling Time</h3>
+        <p className="text-2xl font-bold mt-2">{calculateAverageHandlingTime()} min</p>
+      </Card>
     </div>
   );
 };

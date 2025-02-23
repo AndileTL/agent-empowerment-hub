@@ -59,13 +59,13 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
     },
   });
 
-  const mutate = async (updates: Partial<CSRStatsData>) => {
+  const mutate = async (updates: Partial<CSRStatsData> & { agent_id: string; email: string; group: string }) => {
     const { data, error } = await supabase
       .from('agent_tickets')
       .upsert({
         ...updates,
-        shift_status: updates.shift_status || 'active', // provide default value
-        team_lead_group: updates.team_lead_group || 'default' // provide default value
+        shift_status: updates.shift_status || 'active',
+        team_lead_group: updates.team_lead_group || 'default'
       })
       .select();
 
