@@ -59,15 +59,20 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
     },
   });
 
-  const mutate = async (updates: Partial<CSRStatsData>) => {
-    // Ensure required fields are present with default values if needed
+  const mutate = async (updates: Partial<CSRStatsData> & { agent_id: string; email: string }) => {
+    if (!updates.agent_id || !updates.email) {
+      throw new Error('agent_id and email are required fields');
+    }
+
     const payload = {
       ...updates,
       date: updates.date || new Date().toISOString().split('T')[0],
       shift_type: updates.shift_type || 'day',
       shift_status: updates.shift_status || 'active',
       team_lead_group: updates.team_lead_group || 'default',
-      group: updates.group || 'default'
+      group: updates.group || 'default',
+      agent_id: updates.agent_id,
+      email: updates.email
     };
 
     const { data, error } = await supabase
