@@ -6,7 +6,7 @@ import { Avatar } from "@/components/ui/avatar";
 
 interface AgentCardProps {
   agent: {
-    id: number;
+    id: string; // Changed from number to string to match UUID type
     name: string;
     avatar: string;
     role: string;

@@ -42,7 +42,7 @@ const AgentsList = ({ agents }: AgentsListProps) => {
           <div key={agent.agent_id} onClick={() => navigate(`/agents/${agent.agent_id}`)} className="cursor-pointer">
             <AgentCard
               agent={{
-                id: agent.agent_id,
+                id: agent.agent_id, // Now correctly passing string ID
                 name: agent.email,
                 avatar: "/placeholder.svg",
                 role: "Customer Service Agent",
