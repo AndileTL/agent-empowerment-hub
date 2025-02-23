@@ -3,24 +3,27 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface CSRStatsData {
+  id: string;
   agent_id: string;
   email: string;
-  total_calls: number;
-  total_chats: number;
-  total_tickets: number;
-  average_handling_time: number;
-  satisfaction_score: number;
+  name: string | null;
   date: string;
   group: string;
   shift_type: string;
-  helpdesk_tickets: number;
-  calls: number;
-  live_chat: number;
-  support_dns_emails: number;
-  social_tickets: number;
-  billing_tickets: number;
-  walk_ins: number;
-  total_issues_handled: number;
+  shift_status: string;
+  team_lead_group: string;
+  helpdesk_tickets: number | null;
+  calls: number | null;
+  live_chat: number | null;
+  support_dns_emails: number | null;
+  social_tickets: number | null;
+  billing_tickets: number | null;
+  walk_ins: number | null;
+  total_issues_handled: number | null;
+  ticket_to_calls: number | null;
+  call_classification: string | null;
+  comment: string | null;
+  created_at: string | null;
 }
 
 interface UseCSRStatsOptions {
@@ -59,7 +62,11 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
   const mutate = async (updates: Partial<CSRStatsData>) => {
     const { data, error } = await supabase
       .from('agent_tickets')
-      .upsert(updates)
+      .upsert({
+        ...updates,
+        shift_status: updates.shift_status || 'active', // provide default value
+        team_lead_group: updates.team_lead_group || 'default' // provide default value
+      })
       .select();
 
     if (error) throw error;

@@ -12,11 +12,11 @@ import { AddAgentForm } from "@/components/forms/AddAgentForm";
 
 const AgentManagement = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const { data: agentStats, refetch } = useCSRStats();
+  const { data: agentStats, mutate } = useCSRStats();
 
   const handleAddSuccess = () => {
     setIsAddDialogOpen(false);
-    refetch();
+    mutate({});
   };
 
   return (

@@ -9,8 +9,10 @@ import { useCSRStats } from "@/hooks/useCSRStats";
 const AgentDetails = () => {
   const { id } = useParams();
   const { data: agentStatsData } = useCSRStats({ agentId: id });
-  const agentStats = {
-    ...agentStatsData?.[0],
+  const latestStats = agentStatsData?.[0];
+
+  const agentStats = latestStats ? {
+    ...latestStats,
     attendance: {
       present: 22,
       late: 3,
@@ -51,10 +53,10 @@ const AgentDetails = () => {
         date: "2024-02-10"
       }
     ]
-  };
+  } : null;
 
   // If no agent data is found, show a message
-  if (!agentStatsData?.[0]) {
+  if (!agentStats) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[calc(100vh-200px)]">
@@ -104,19 +106,23 @@ const AgentDetails = () => {
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
                   <p className="text-sm text-gray-600">Total Calls</p>
-                  <p className="text-xl font-semibold">{agentStats.total_calls}</p>
+                  <p className="text-xl font-semibold">{agentStats.calls || 0}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Chats</p>
-                  <p className="text-xl font-semibold">{agentStats.total_chats}</p>
+                  <p className="text-xl font-semibold">{agentStats.live_chat || 0}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Tickets</p>
-                  <p className="text-xl font-semibold">{agentStats.total_tickets}</p>
+                  <p className="text-xl font-semibold">
+                    {(agentStats.helpdesk_tickets || 0) + 
+                     (agentStats.social_tickets || 0) + 
+                     (agentStats.billing_tickets || 0)}
+                  </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Satisfaction Score</p>
-                  <p className="text-xl font-semibold">{agentStats.satisfaction_score}%</p>
+                  <p className="text-sm text-gray-600">Total Issues</p>
+                  <p className="text-xl font-semibold">{agentStats.total_issues_handled || 0}</p>
                 </div>
               </div>
             </div>
