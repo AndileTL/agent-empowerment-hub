@@ -64,6 +64,17 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
       throw new Error('agent_id and email are required fields');
     }
 
+    // Calculate total issues handled
+    const totalIssues = (
+      (updates.helpdesk_tickets || 0) +
+      (updates.calls || 0) +
+      (updates.live_chat || 0) +
+      (updates.support_dns_emails || 0) +
+      (updates.social_tickets || 0) +
+      (updates.billing_tickets || 0) +
+      (updates.walk_ins || 0)
+    );
+
     const payload = {
       ...updates,
       date: updates.date || new Date().toISOString().split('T')[0],
@@ -72,7 +83,8 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
       team_lead_group: updates.team_lead_group || 'default',
       group: updates.group || 'default',
       agent_id: updates.agent_id,
-      email: updates.email
+      email: updates.email,
+      total_issues_handled: totalIssues
     };
 
     const { data, error } = await supabase
