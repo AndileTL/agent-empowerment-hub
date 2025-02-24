@@ -9,6 +9,7 @@ import StatsCard from "@/components/StatsCard";
 import SupervisorMonitoring from "@/components/SupervisorMonitoring";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ClipboardCheck, Target, TrendingUp } from "lucide-react";
+import { format } from "date-fns";
 
 interface QAEvaluation {
   id: string;
@@ -16,6 +17,8 @@ interface QAEvaluation {
   total_score: number;
   interaction_type: string;
   feedback: string;
+  agent_id: string;
+  evaluator_id: string;
 }
 
 const QAScoring = () => {
@@ -25,16 +28,35 @@ const QAScoring = () => {
       const { data, error } = await supabase
         .from('qa_evaluations')
         .select('*')
-        .order('evaluation_date', { ascending: false })
-        .limit(10);
+        .order('evaluation_date', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching QA evaluations:', error);
+        throw error;
+      }
       return data as QAEvaluation[];
     },
   });
 
+  // Calculate average score
+  const averageScore = evaluations?.length 
+    ? Math.round(evaluations.reduce((acc, eval_) => acc + eval_.total_score, 0) / evaluations.length)
+    : 0;
+
+  // Format data for the line chart
+  const chartData = evaluations?.map(eval_ => ({
+    date: format(new Date(eval_.evaluation_date), 'MMM dd'),
+    score: eval_.total_score
+  })) || [];
+
   if (isLoading) {
-    return <DashboardLayout>Loading...</DashboardLayout>;
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <p>Loading...</p>
+        </div>
+      </DashboardLayout>
+    );
   }
 
   return (
@@ -55,13 +77,13 @@ const QAScoring = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <StatsCard
                 title="Average Score"
-                value="92%"
+                value={`${averageScore}%`}
                 icon={<Target className="h-6 w-6" />}
                 trend={{ value: 5, isPositive: true }}
               />
               <StatsCard
                 title="Evaluations"
-                value="24"
+                value={evaluations?.length || 0}
                 icon={<ClipboardCheck className="h-6 w-6" />}
               />
               <StatsCard
@@ -80,12 +102,17 @@ const QAScoring = () => {
               <CardContent>
                 <div className="h-[300px]">
                   <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={evaluations}>
+                    <LineChart data={chartData}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="evaluation_date" />
+                      <XAxis dataKey="date" />
                       <YAxis domain={[0, 100]} />
                       <Tooltip />
-                      <Line type="monotone" dataKey="total_score" stroke="#10b981" />
+                      <Line 
+                        type="monotone" 
+                        dataKey="score" 
+                        stroke="#10b981" 
+                        strokeWidth={2}
+                      />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
@@ -100,10 +127,15 @@ const QAScoring = () => {
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="font-medium">{evaluation.interaction_type}</p>
-                        <p className="text-sm text-gray-600">{new Date(evaluation.evaluation_date).toLocaleDateString()}</p>
+                        <p className="text-sm text-gray-600">
+                          {format(new Date(evaluation.evaluation_date), 'PP')}
+                        </p>
+                        {evaluation.feedback && (
+                          <p className="mt-2 text-gray-600">{evaluation.feedback}</p>
+                        )}
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-success-600">{evaluation.total_score}%</p>
+                        <p className="text-2xl font-bold text-emerald-600">{evaluation.total_score}%</p>
                         <Button variant="outline" size="sm">View Details</Button>
                       </div>
                     </div>
