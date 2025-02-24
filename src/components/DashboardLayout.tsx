@@ -1,14 +1,18 @@
+
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings, Award, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
+
 const DashboardLayout = ({
   children
 }: DashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   const menuItems = [{
     icon: BarChart2,
     label: "Dashboard",
@@ -28,7 +32,7 @@ const DashboardLayout = ({
   }, {
     icon: CheckSquare,
     label: "QA Scoring",
-    route: "/qa"
+    route: "/qa-scoring"  // Updated this route to match App.tsx
   }, {
     icon: Award,
     label: "Recognition",
@@ -38,7 +42,9 @@ const DashboardLayout = ({
     label: "Settings",
     route: "/settings"
   }];
-  return <SidebarProvider>
+
+  return (
+    <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
         <Sidebar className="border-r border-gray-200">
           <SidebarContent className="p-4 rounded-sm">
@@ -51,10 +57,16 @@ const DashboardLayout = ({
               </SidebarTrigger>
             </div>
             <nav className="space-y-2">
-              {menuItems.map(item => <a key={item.label} href={item.route} className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-100 transition-colors">
+              {menuItems.map(item => (
+                <a 
+                  key={item.label} 
+                  href={item.route} 
+                  className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-100 transition-colors"
+                >
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
-                </a>)}
+                </a>
+              ))}
             </nav>
           </SidebarContent>
         </Sidebar>
@@ -64,6 +76,8 @@ const DashboardLayout = ({
           </div>
         </main>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
+
 export default DashboardLayout;
