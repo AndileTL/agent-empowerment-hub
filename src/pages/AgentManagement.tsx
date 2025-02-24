@@ -5,11 +5,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { useCSRStats } from "@/hooks/useCSRStats";
-import AgentStatusPie from "@/components/AgentStatusPie";
-import QuickStats from "@/components/stats/QuickStats";
 import AgentsList from "@/components/agents/AgentsList";
 import { AddAgentForm } from "@/components/forms/AddAgentForm";
-import CallCenterMetrics from "@/components/dashboard/CallCenterMetrics";
 
 const AgentManagement = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -24,33 +21,16 @@ const AgentManagement = () => {
       <div className="space-y-8 animate-fade-in">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Call Center Dashboard</h1>
-            <p className="mt-2 text-gray-600">Real-time performance metrics and agent management</p>
+            <h1 className="text-3xl font-bold text-gray-900">Agent Management</h1>
+            <p className="mt-2 text-gray-600">Manage your contact center agents</p>
           </div>
           <Button onClick={() => setIsAddDialogOpen(true)}>
             <Plus className="mr-2 h-4 w-4" /> Add New Agent
           </Button>
         </div>
 
-        <CallCenterMetrics agentStats={agentStats} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-100">
           <AgentsList agents={agentStats} />
-
-          <div className="space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm border border-gray-100">
-              <h2 className="text-xl font-semibold mb-4">Agent Status Overview</h2>
-              <AgentStatusPie
-                data={[
-                  { status: "Online", value: 24, color: "#10b981" },
-                  { status: "Busy", value: 12, color: "#f59e0b" },
-                  { status: "Offline", value: 8, color: "#6b7280" },
-                ]}
-              />
-            </div>
-
-            <QuickStats agentStats={agentStats} />
-          </div>
         </div>
 
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
