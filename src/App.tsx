@@ -16,15 +16,20 @@ import NotFound from "@/pages/NotFound";
 import "./App.css";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Router>
+      <Router>
+        <TooltipProvider>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/agents" element={<AgentManagement />} />
@@ -36,8 +41,10 @@ function App() {
             <Route path="/tickets" element={<AgentTickets />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </Router>
-      </TooltipProvider>
+          <Toaster />
+          <Sonner />
+        </TooltipProvider>
+      </Router>
     </QueryClientProvider>
   );
 }
