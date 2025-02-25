@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Upload, MonitorCheck, Award, AlertCircle } from "lucide-react";
 import SupervisorMonitoring from "@/components/SupervisorMonitoring";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 type PerformanceType = "merit" | "demerit";
 
@@ -24,6 +25,21 @@ interface PerformanceRecord {
   description: string;
   date: string;
   created_at: string;
+}
+
+interface AttendanceStats {
+  present: number;
+  late: number;
+  absent: number;
+  rate: string;
+}
+
+interface Certification {
+  id: string;
+  name: string;
+  completedDate: string | null;
+  status: string;
+  progress: number;
 }
 
 const mockAttendance = {
@@ -69,6 +85,67 @@ const AgentDetails = () => {
     type: "merit" as PerformanceType,
     description: "",
     date: new Date().toISOString().split('T')[0],
+  });
+
+  const { data: attendanceData } = useQuery({
+    queryKey: ['attendance', id],
+    queryFn: async () => {
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      
+      const { data, error } = await supabase
+        .from('agent_attendance')
+        .select('status')
+        .eq('agent_id', id)
+        .gte('date', thirtyDaysAgo.toISOString());
+
+      if (error) throw error;
+
+      const stats = data.reduce((acc, record) => {
+        acc[record.status]++;
+        return acc;
+      }, { present: 0, late: 0, absent: 0 });
+
+      const totalDays = data.length;
+      const rate = totalDays > 0 
+        ? `${Math.round((stats.present / totalDays) * 100)}%` 
+        : '0%';
+
+      return {
+        ...stats,
+        rate
+      } as AttendanceStats;
+    },
+    enabled: !!id
+  });
+
+  const { data: certificationsData } = useQuery({
+    queryKey: ['certifications', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('agent_certifications')
+        .select(`
+          certification_id,
+          status,
+          progress,
+          completed_date,
+          certifications (
+            name
+          )
+        `)
+        .eq('agent_id', id);
+
+      if (error) throw error;
+
+      return data.map(cert => ({
+        id: cert.certification_id,
+        name: cert.certifications.name,
+        completedDate: cert.completed_date,
+        status: cert.status,
+        progress: cert.progress || 0
+      })) as Certification[];
+    },
+    enabled: !!id
   });
 
   useEffect(() => {
@@ -312,15 +389,15 @@ const AgentDetails = () => {
           <h2 className="text-lg font-semibold mb-4">Attendance Record</h2>
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-success-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-success-600">{mockAttendance.present}</p>
+              <p className="text-2xl font-bold text-success-600">{attendanceData?.present || 0}</p>
               <p className="text-sm text-success-700">Present Days</p>
             </div>
             <div className="bg-warning-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-warning-600">{mockAttendance.late}</p>
+              <p className="text-2xl font-bold text-warning-600">{attendanceData?.late || 0}</p>
               <p className="text-sm text-warning-700">Late Days</p>
             </div>
             <div className="bg-error-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-error-600">{mockAttendance.absent}</p>
+              <p className="text-2xl font-bold text-error-600">{attendanceData?.absent || 0}</p>
               <p className="text-sm text-error-700">Absent Days</p>
             </div>
           </div>
@@ -329,7 +406,7 @@ const AgentDetails = () => {
             <div className="mt-2 h-2 rounded-full bg-gray-100">
               <div
                 className="h-full rounded-full bg-success-500"
-                style={{ width: mockAttendance.rate }}
+                style={{ width: attendanceData?.rate || '0%' }}
               />
             </div>
           </div>
@@ -338,8 +415,8 @@ const AgentDetails = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Certifications</h2>
           <div className="space-y-4">
-            {mockCertifications.map((cert, index) => (
-              <div key={index} className="border-b last:border-0 pb-4 last:pb-0">
+            {certificationsData?.map((cert) => (
+              <div key={cert.id} className="border-b last:border-0 pb-4 last:pb-0">
                 <div className="flex justify-between items-start">
                   <div>
                     <h3 className="font-medium">{cert.name}</h3>
@@ -357,6 +434,9 @@ const AgentDetails = () => {
                 </div>
               </div>
             ))}
+            {!certificationsData?.length && (
+              <p className="text-gray-500 text-center py-4">No certifications found</p>
+            )}
           </div>
         </Card>
 

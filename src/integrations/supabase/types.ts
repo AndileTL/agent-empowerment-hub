@@ -65,6 +65,83 @@ export type Database = {
           },
         ]
       }
+      agent_attendance: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          date: string
+          id: string
+          status: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          date?: string
+          id?: string
+          status: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          date?: string
+          id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_attendance_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_certifications: {
+        Row: {
+          agent_id: string
+          certification_id: string
+          completed_date: string | null
+          created_at: string | null
+          id: string
+          progress: number | null
+          status: string
+        }
+        Insert: {
+          agent_id: string
+          certification_id: string
+          completed_date?: string | null
+          created_at?: string | null
+          id?: string
+          progress?: number | null
+          status: string
+        }
+        Update: {
+          agent_id?: string
+          certification_id?: string
+          completed_date?: string | null
+          created_at?: string | null
+          id?: string
+          progress?: number | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_certifications_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_certifications_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_performance: {
         Row: {
           agent_id: string
@@ -217,6 +294,27 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      certifications: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
       monitoring_settings: {
         Row: {
