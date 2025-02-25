@@ -15,7 +15,7 @@ interface AddAgentFormProps {
 export const shiftTypes = [
   { value: "day", label: "Day Shift" },
   { value: "night", label: "Night Shift" },
-  { value: "flex", label: "Flex Shift" },
+  { value: "afternoon", label: "Afternoon Shift" },
 ];
 
 export const roles = [
@@ -25,7 +25,7 @@ export const roles = [
 ];
 
 export const teamLeads = [
-  { value: "john_doe", label: "John Doe" },
+  { value: "andile_moyo", label: "Andile Moyo" },
   { value: "jane_smith", label: "Jane Smith" },
   { value: "mike_jones", label: "Mike Jones" },
 ];
