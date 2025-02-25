@@ -1,61 +1,128 @@
-
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
 import { Avatar } from "@/components/ui/avatar";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useCSRStats } from "@/hooks/useCSRStats";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { Upload, MonitorCheck, Award, AlertCircle } from "lucide-react";
+import SupervisorMonitoring from "@/components/SupervisorMonitoring";
+import { supabase } from "@/integrations/supabase/client";
 
 const AgentDetails = () => {
   const { id } = useParams();
-  const { data: agentStatsData } = useCSRStats({ agentId: id });
+  const { data: agentStatsData, mutate } = useCSRStats({ agentId: id });
   const latestStats = agentStatsData?.[0];
+  const { toast } = useToast();
 
-  const agentStats = latestStats ? {
-    ...latestStats,
-    attendance: {
-      present: 22,
-      late: 3,
-      absent: 1,
-      rate: "85%"
-    },
-    certifications: [
-      {
-        name: "Customer Service Excellence",
-        completedDate: "2024-01-15",
-        status: "completed"
-      },
-      {
-        name: "Advanced Problem Resolution",
-        completedDate: "2024-02-20",
-        status: "completed"
-      },
-      {
-        name: "Technical Support Fundamentals",
-        progress: 75,
-        status: "in-progress"
-      }
-    ],
-    performance: [
-      {
-        type: "merit",
-        description: "Outstanding customer satisfaction scores for Q1",
-        date: "2024-03-15"
-      },
-      {
-        type: "merit",
-        description: "Successfully handled complex escalation case",
-        date: "2024-02-28"
-      },
-      {
-        type: "demerit",
-        description: "Missed team meeting without notification",
-        date: "2024-02-10"
-      }
-    ]
-  } : null;
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isMeritOpen, setIsMeritOpen] = useState(false);
+  const [isMonitoringOpen, setIsMonitoringOpen] = useState(false);
+  const [editForm, setEditForm] = useState({
+    name: latestStats?.name || "",
+    email: latestStats?.email || "",
+    group: latestStats?.group || "",
+    shift_type: latestStats?.shift_type || "",
+    team_lead_group: latestStats?.team_lead_group || "",
+  });
+  const [meritForm, setMeritForm] = useState({
+    type: "merit",
+    description: "",
+    date: new Date().toISOString().split('T')[0],
+  });
 
-  // If no agent data is found, show a message
+  const handleUpdateAgent = async () => {
+    try {
+      const { error } = await supabase
+        .from('agent_tickets')
+        .update({
+          name: editForm.name,
+          email: editForm.email,
+          group: editForm.group,
+          shift_type: editForm.shift_type,
+          team_lead_group: editForm.team_lead_group,
+        })
+        .eq('agent_id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Agent details updated successfully",
+      });
+      setIsEditOpen(false);
+      mutate();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update agent details",
+      });
+    }
+  };
+
+  const handleAddMerit = async () => {
+    if (!meritForm.description) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please provide a description",
+      });
+      return;
+    }
+
+    const newPerformanceNote = {
+      type: meritForm.type,
+      description: meritForm.description,
+      date: meritForm.date,
+    };
+
+    // In a real application, you would update this in the database
+    // For now, we'll just update the local state
+    if (latestStats) {
+      latestStats.performance = [
+        newPerformanceNote,
+        ...(latestStats.performance || []),
+      ];
+    }
+
+    setMeritForm({
+      type: "merit",
+      description: "",
+      date: new Date().toISOString().split('T')[0],
+    });
+    setIsMeritOpen(false);
+    
+    toast({
+      title: "Success",
+      description: `${meritForm.type === 'merit' ? 'Merit' : 'Demerit'} added successfully`,
+    });
+  };
+
+  const performanceData = [
+    { date: '2023-10', score: 85 },
+    { date: '2023-11', score: 88 },
+    { date: '2023-12', score: 86 },
+    { date: '2024-01', score: 92 },
+    { date: '2024-02', score: 90 },
+    { date: '2024-03', score: 94 }
+  ];
+
+  const satisfactionData = [
+    { date: '2023-10', score: 88 },
+    { date: '2023-11', score: 92 },
+    { date: '2023-12', score: 91 },
+    { date: '2024-01', score: 94 },
+    { date: '2024-02', score: 93 },
+    { date: '2024-03', score: 95 }
+  ];
+
   if (!agentStats) {
     return (
       <DashboardLayout>
@@ -72,59 +139,52 @@ const AgentDetails = () => {
     );
   }
 
-  // Performance trend data - 6 months of historical data
-  const performanceData = [
-    { date: '2023-10', score: 85 },
-    { date: '2023-11', score: 88 },
-    { date: '2023-12', score: 86 },
-    { date: '2024-01', score: 92 },
-    { date: '2024-02', score: 90 },
-    { date: '2024-03', score: 94 }
-  ];
-
-  // Customer satisfaction trend data
-  const satisfactionData = [
-    { date: '2023-10', score: 88 },
-    { date: '2023-11', score: 92 },
-    { date: '2023-12', score: 91 },
-    { date: '2024-01', score: 94 },
-    { date: '2024-02', score: 93 },
-    { date: '2024-03', score: 95 }
-  ];
-
   return (
     <DashboardLayout>
       <div className="space-y-8 animate-fade-in">
         <Card className="p-6">
-          <div className="flex items-start gap-6">
-            <Avatar className="h-20 w-20">
-              <img src="/placeholder.svg" alt={agentStats.email} />
-            </Avatar>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{agentStats.email}</h1>
-              <p className="text-gray-600">Customer Support Agent</p>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Total Calls</p>
-                  <p className="text-xl font-semibold">{agentStats.calls || 0}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Chats</p>
-                  <p className="text-xl font-semibold">{agentStats.live_chat || 0}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Tickets</p>
-                  <p className="text-xl font-semibold">
-                    {(agentStats.helpdesk_tickets || 0) + 
-                     (agentStats.social_tickets || 0) + 
-                     (agentStats.billing_tickets || 0)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600">Total Issues</p>
-                  <p className="text-xl font-semibold">{agentStats.total_issues_handled || 0}</p>
+          <div className="flex items-start justify-between">
+            <div className="flex items-start gap-6">
+              <Avatar className="h-20 w-20">
+                <img src="/placeholder.svg" alt={agentStats.email} />
+              </Avatar>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">{agentStats.name || agentStats.email}</h1>
+                <p className="text-gray-600">Customer Support Agent</p>
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Calls</p>
+                    <p className="text-xl font-semibold">{agentStats.calls || 0}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Total Chats</p>
+                    <p className="text-xl font-semibold">{agentStats.live_chat || 0}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Total Tickets</p>
+                    <p className="text-xl font-semibold">
+                      {(agentStats.helpdesk_tickets || 0) + 
+                       (agentStats.social_tickets || 0) + 
+                       (agentStats.billing_tickets || 0)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-600">Total Issues</p>
+                    <p className="text-xl font-semibold">{agentStats.total_issues_handled || 0}</p>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div className="space-x-4">
+              <Button onClick={() => setIsEditOpen(true)}>
+                Edit Agent
+              </Button>
+              <Button onClick={() => setIsMeritOpen(true)}>
+                Add Merit/Demerit
+              </Button>
+              <Button onClick={() => setIsMonitoringOpen(true)}>
+                Supervisor Tools
+              </Button>
             </div>
           </div>
         </Card>
@@ -235,6 +295,142 @@ const AgentDetails = () => {
             ))}
           </div>
         </Card>
+
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit Agent Details</DialogTitle>
+              <DialogDescription>
+                Update the agent's information below.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={editForm.email}
+                  onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="group">Group</Label>
+                <Input
+                  id="group"
+                  value={editForm.group}
+                  onChange={(e) => setEditForm({ ...editForm, group: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="shift_type">Shift Type</Label>
+                <Select
+                  value={editForm.shift_type}
+                  onValueChange={(value) => setEditForm({ ...editForm, shift_type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select shift type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="day">Day Shift</SelectItem>
+                    <SelectItem value="night">Night Shift</SelectItem>
+                    <SelectItem value="flex">Flex Shift</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="team_lead_group">Team Lead Group</Label>
+                <Input
+                  id="team_lead_group"
+                  value={editForm.team_lead_group}
+                  onChange={(e) => setEditForm({ ...editForm, team_lead_group: e.target.value })}
+                />
+              </div>
+              <div className="flex justify-end gap-4 mt-4">
+                <Button variant="outline" onClick={() => setIsEditOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleUpdateAgent}>
+                  Save Changes
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isMeritOpen} onOpenChange={setIsMeritOpen}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Add Merit/Demerit</DialogTitle>
+              <DialogDescription>
+                Record a merit or demerit for this agent.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Type</Label>
+                <Select
+                  value={meritForm.type}
+                  onValueChange={(value) => setMeritForm({ ...meritForm, type: value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="merit">Merit</SelectItem>
+                    <SelectItem value="demerit">Demerit</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label>Description</Label>
+                <Input
+                  value={meritForm.description}
+                  onChange={(e) => setMeritForm({ ...meritForm, description: e.target.value })}
+                  placeholder="Enter the reason..."
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Date</Label>
+                <Input
+                  type="date"
+                  value={meritForm.date}
+                  onChange={(e) => setMeritForm({ ...meritForm, date: e.target.value })}
+                />
+              </div>
+              <div className="flex justify-end gap-4 mt-4">
+                <Button variant="outline" onClick={() => setIsMeritOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleAddMerit}>
+                  Add {meritForm.type === 'merit' ? 'Merit' : 'Demerit'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isMonitoringOpen} onOpenChange={setIsMonitoringOpen}>
+          <DialogContent className="sm:max-w-[600px]">
+            <DialogHeader>
+              <DialogTitle>Supervisor Tools</DialogTitle>
+              <DialogDescription>
+                Manage monitoring and data uploads for this agent.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-6 py-4">
+              <SupervisorMonitoring />
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
