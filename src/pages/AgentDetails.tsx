@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -27,7 +26,6 @@ interface PerformanceRecord {
   created_at: string;
 }
 
-// Mock data for attendance and certifications
 const mockAttendance = {
   present: 22,
   late: 3,
@@ -95,7 +93,6 @@ const AgentDetails = () => {
       return;
     }
 
-    // Type assertion to ensure the data matches our PerformanceRecord type
     setPerformanceRecords(data.map(record => ({
       ...record,
       type: record.type as 'merit' | 'demerit'
@@ -103,6 +100,15 @@ const AgentDetails = () => {
   };
 
   const handleUpdateAgent = async () => {
+    if (!id || !editForm.email) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Missing required fields",
+      });
+      return;
+    }
+
     try {
       const { error } = await supabase
         .from('agent_tickets')
@@ -122,8 +128,8 @@ const AgentDetails = () => {
         description: "Agent details updated successfully",
       });
       setIsEditOpen(false);
-      // Pass an empty object as the argument to mutate
-      mutate({});
+      
+      mutate({ agent_id: id, email: editForm.email });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -463,7 +469,7 @@ const AgentDetails = () => {
                 <Label>Type</Label>
                 <Select
                   value={meritForm.type}
-                  onValueChange={(value) => setMeritForm({ ...meritForm, type: value })}
+                  onValueChange={(value: PerformanceType) => setMeritForm({ ...meritForm, type: value })}
                 >
                   <SelectTrigger>
                     <SelectValue />
