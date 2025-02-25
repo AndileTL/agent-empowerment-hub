@@ -65,6 +65,41 @@ export type Database = {
           },
         ]
       }
+      agent_performance: {
+        Row: {
+          agent_id: string
+          created_at: string | null
+          date: string
+          description: string
+          id: string
+          type: string
+        }
+        Insert: {
+          agent_id: string
+          created_at?: string | null
+          date?: string
+          description: string
+          id?: string
+          type: string
+        }
+        Update: {
+          agent_id?: string
+          created_at?: string | null
+          date?: string
+          description?: string
+          id?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_agent"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agent_tickets: {
         Row: {
           agent_id: string

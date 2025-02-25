@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Card } from "@/components/ui/card";
@@ -15,12 +15,21 @@ import { Upload, MonitorCheck, Award, AlertCircle } from "lucide-react";
 import SupervisorMonitoring from "@/components/SupervisorMonitoring";
 import { supabase } from "@/integrations/supabase/client";
 
+interface PerformanceRecord {
+  id: string;
+  type: 'merit' | 'demerit';
+  description: string;
+  date: string;
+  created_at: string;
+}
+
 const AgentDetails = () => {
   const { id } = useParams();
   const { data: agentStatsData, isLoading, mutate } = useCSRStats({ agentId: id });
   const latestStats = agentStatsData?.[0];
   const { toast } = useToast();
 
+  const [performanceRecords, setPerformanceRecords] = useState<PerformanceRecord[]>([]);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isMeritOpen, setIsMeritOpen] = useState(false);
   const [isMonitoringOpen, setIsMonitoringOpen] = useState(false);
@@ -32,10 +41,35 @@ const AgentDetails = () => {
     team_lead_group: latestStats?.team_lead_group || "",
   });
   const [meritForm, setMeritForm] = useState({
-    type: "merit",
+    type: "merit" as const,
     description: "",
     date: new Date().toISOString().split('T')[0],
   });
+
+  useEffect(() => {
+    if (id) {
+      fetchPerformanceRecords();
+    }
+  }, [id]);
+
+  const fetchPerformanceRecords = async () => {
+    const { data, error } = await supabase
+      .from('agent_performance')
+      .select('*')
+      .eq('agent_id', id)
+      .order('date', { ascending: false });
+
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to fetch performance records",
+      });
+      return;
+    }
+
+    setPerformanceRecords(data);
+  };
 
   const handleUpdateAgent = async () => {
     try {
@@ -68,7 +102,7 @@ const AgentDetails = () => {
   };
 
   const handleAddMerit = async () => {
-    if (!meritForm.description) {
+    if (!meritForm.description || !id) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -78,12 +112,29 @@ const AgentDetails = () => {
     }
 
     try {
-      // For now, we'll just show a success message since we haven't created the performance table yet
+      const { error } = await supabase
+        .from('agent_performance')
+        .insert({
+          agent_id: id,
+          type: meritForm.type,
+          description: meritForm.description,
+          date: meritForm.date,
+        });
+
+      if (error) throw error;
+
       toast({
         title: "Success",
         description: `${meritForm.type === 'merit' ? 'Merit' : 'Demerit'} added successfully`,
       });
+      
+      setMeritForm({
+        type: "merit",
+        description: "",
+        date: new Date().toISOString().split('T')[0],
+      });
       setIsMeritOpen(false);
+      fetchPerformanceRecords();
     } catch (error) {
       toast({
         variant: "destructive",
@@ -274,23 +325,26 @@ const AgentDetails = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Performance Notes</h2>
           <div className="space-y-4">
-            {latestStats.performance?.map((note, index) => (
-              <div key={index} className={`p-4 rounded-lg ${
-                note.type === 'merit' ? 'bg-success-50' : 'bg-error-50'
+            {performanceRecords.map((record) => (
+              <div key={record.id} className={`p-4 rounded-lg ${
+                record.type === 'merit' ? 'bg-success-50' : 'bg-error-50'
               }`}>
                 <div className="flex justify-between items-start">
                   <div>
-                    <p className="font-medium">{note.description}</p>
-                    <p className="text-sm text-gray-600">{new Date(note.date).toLocaleDateString()}</p>
+                    <p className="font-medium">{record.description}</p>
+                    <p className="text-sm text-gray-600">{new Date(record.date).toLocaleDateString()}</p>
                   </div>
                   <div className={`px-3 py-1 rounded-full text-sm ${
-                    note.type === 'merit' ? 'bg-success-100 text-success-700' : 'bg-error-100 text-error-700'
+                    record.type === 'merit' ? 'bg-success-100 text-success-700' : 'bg-error-100 text-error-700'
                   }`}>
-                    {note.type === 'merit' ? 'Merit' : 'Demerit'}
+                    {record.type === 'merit' ? 'Merit' : 'Demerit'}
                   </div>
                 </div>
               </div>
             ))}
+            {performanceRecords.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No performance records found</p>
+            )}
           </div>
         </Card>
 
