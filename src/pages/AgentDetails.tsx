@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -17,11 +18,35 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface PerformanceRecord {
   id: string;
+  agent_id: string;
   type: 'merit' | 'demerit';
   description: string;
   date: string;
   created_at: string;
 }
+
+// Mock data for attendance and certifications
+const mockAttendance = {
+  present: 22,
+  late: 3,
+  absent: 1,
+  rate: "85%"
+};
+
+const mockCertifications = [
+  {
+    name: "Customer Service Fundamentals",
+    completedDate: "2024-01-15",
+    status: "completed",
+    progress: 100
+  },
+  {
+    name: "Advanced Support Techniques",
+    completedDate: null,
+    status: "in_progress",
+    progress: 60
+  }
+];
 
 const AgentDetails = () => {
   const { id } = useParams();
@@ -41,7 +66,7 @@ const AgentDetails = () => {
     team_lead_group: latestStats?.team_lead_group || "",
   });
   const [meritForm, setMeritForm] = useState({
-    type: "merit" as const,
+    type: "merit" as "merit" | "demerit",
     description: "",
     date: new Date().toISOString().split('T')[0],
   });
@@ -68,7 +93,11 @@ const AgentDetails = () => {
       return;
     }
 
-    setPerformanceRecords(data);
+    // Type assertion to ensure the data matches our PerformanceRecord type
+    setPerformanceRecords(data.map(record => ({
+      ...record,
+      type: record.type as 'merit' | 'demerit'
+    })));
   };
 
   const handleUpdateAgent = async () => {
@@ -274,15 +303,15 @@ const AgentDetails = () => {
           <h2 className="text-lg font-semibold mb-4">Attendance Record</h2>
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-success-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-success-600">{latestStats.attendance?.present}</p>
+              <p className="text-2xl font-bold text-success-600">{mockAttendance.present}</p>
               <p className="text-sm text-success-700">Present Days</p>
             </div>
             <div className="bg-warning-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-warning-600">{latestStats.attendance?.late}</p>
+              <p className="text-2xl font-bold text-warning-600">{mockAttendance.late}</p>
               <p className="text-sm text-warning-700">Late Days</p>
             </div>
             <div className="bg-error-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-error-600">{latestStats.attendance?.absent}</p>
+              <p className="text-2xl font-bold text-error-600">{mockAttendance.absent}</p>
               <p className="text-sm text-error-700">Absent Days</p>
             </div>
           </div>
@@ -291,7 +320,7 @@ const AgentDetails = () => {
             <div className="mt-2 h-2 rounded-full bg-gray-100">
               <div
                 className="h-full rounded-full bg-success-500"
-                style={{ width: latestStats.attendance?.rate }}
+                style={{ width: mockAttendance.rate }}
               />
             </div>
           </div>
@@ -300,7 +329,7 @@ const AgentDetails = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Certifications</h2>
           <div className="space-y-4">
-            {latestStats.certifications?.map((cert, index) => (
+            {mockCertifications.map((cert, index) => (
               <div key={index} className="border-b last:border-0 pb-4 last:pb-0">
                 <div className="flex justify-between items-start">
                   <div>
