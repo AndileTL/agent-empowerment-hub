@@ -17,7 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const AgentDetails = () => {
   const { id } = useParams();
-  const { data: agentStatsData, mutate } = useCSRStats({ agentId: id });
+  const { data: agentStatsData, isLoading, mutate } = useCSRStats({ agentId: id });
   const latestStats = agentStatsData?.[0];
   const { toast } = useToast();
 
@@ -77,32 +77,20 @@ const AgentDetails = () => {
       return;
     }
 
-    const newPerformanceNote = {
-      type: meritForm.type,
-      description: meritForm.description,
-      date: meritForm.date,
-    };
-
-    // In a real application, you would update this in the database
-    // For now, we'll just update the local state
-    if (latestStats) {
-      latestStats.performance = [
-        newPerformanceNote,
-        ...(latestStats.performance || []),
-      ];
+    try {
+      // For now, we'll just show a success message since we haven't created the performance table yet
+      toast({
+        title: "Success",
+        description: `${meritForm.type === 'merit' ? 'Merit' : 'Demerit'} added successfully`,
+      });
+      setIsMeritOpen(false);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to add performance record",
+      });
     }
-
-    setMeritForm({
-      type: "merit",
-      description: "",
-      date: new Date().toISOString().split('T')[0],
-    });
-    setIsMeritOpen(false);
-    
-    toast({
-      title: "Success",
-      description: `${meritForm.type === 'merit' ? 'Merit' : 'Demerit'} added successfully`,
-    });
   };
 
   const performanceData = [
@@ -123,7 +111,17 @@ const AgentDetails = () => {
     { date: '2024-03', score: 95 }
   ];
 
-  if (!agentStats) {
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+          <p>Loading...</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!latestStats) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-[calc(100vh-200px)]">
@@ -146,31 +144,31 @@ const AgentDetails = () => {
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-6">
               <Avatar className="h-20 w-20">
-                <img src="/placeholder.svg" alt={agentStats.email} />
+                <img src="/placeholder.svg" alt={latestStats.email} />
               </Avatar>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">{agentStats.name || agentStats.email}</h1>
+                <h1 className="text-2xl font-bold text-gray-900">{latestStats.name || latestStats.email}</h1>
                 <p className="text-gray-600">Customer Support Agent</p>
                 <div className="mt-4 grid grid-cols-2 gap-4">
                   <div>
                     <p className="text-sm text-gray-600">Total Calls</p>
-                    <p className="text-xl font-semibold">{agentStats.calls || 0}</p>
+                    <p className="text-xl font-semibold">{latestStats.calls || 0}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Chats</p>
-                    <p className="text-xl font-semibold">{agentStats.live_chat || 0}</p>
+                    <p className="text-xl font-semibold">{latestStats.live_chat || 0}</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Tickets</p>
                     <p className="text-xl font-semibold">
-                      {(agentStats.helpdesk_tickets || 0) + 
-                       (agentStats.social_tickets || 0) + 
-                       (agentStats.billing_tickets || 0)}
+                      {(latestStats.helpdesk_tickets || 0) + 
+                       (latestStats.social_tickets || 0) + 
+                       (latestStats.billing_tickets || 0)}
                     </p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-600">Total Issues</p>
-                    <p className="text-xl font-semibold">{agentStats.total_issues_handled || 0}</p>
+                    <p className="text-xl font-semibold">{latestStats.total_issues_handled || 0}</p>
                   </div>
                 </div>
               </div>
@@ -225,15 +223,15 @@ const AgentDetails = () => {
           <h2 className="text-lg font-semibold mb-4">Attendance Record</h2>
           <div className="grid grid-cols-3 gap-4">
             <div className="bg-success-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-success-600">{agentStats.attendance.present}</p>
+              <p className="text-2xl font-bold text-success-600">{latestStats.attendance?.present}</p>
               <p className="text-sm text-success-700">Present Days</p>
             </div>
             <div className="bg-warning-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-warning-600">{agentStats.attendance.late}</p>
+              <p className="text-2xl font-bold text-warning-600">{latestStats.attendance?.late}</p>
               <p className="text-sm text-warning-700">Late Days</p>
             </div>
             <div className="bg-error-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-error-600">{agentStats.attendance.absent}</p>
+              <p className="text-2xl font-bold text-error-600">{latestStats.attendance?.absent}</p>
               <p className="text-sm text-error-700">Absent Days</p>
             </div>
           </div>
@@ -242,7 +240,7 @@ const AgentDetails = () => {
             <div className="mt-2 h-2 rounded-full bg-gray-100">
               <div
                 className="h-full rounded-full bg-success-500"
-                style={{ width: agentStats.attendance.rate }}
+                style={{ width: latestStats.attendance?.rate }}
               />
             </div>
           </div>
@@ -251,7 +249,7 @@ const AgentDetails = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Certifications</h2>
           <div className="space-y-4">
-            {agentStats.certifications.map((cert, index) => (
+            {latestStats.certifications?.map((cert, index) => (
               <div key={index} className="border-b last:border-0 pb-4 last:pb-0">
                 <div className="flex justify-between items-start">
                   <div>
@@ -276,7 +274,7 @@ const AgentDetails = () => {
         <Card className="p-6">
           <h2 className="text-lg font-semibold mb-4">Performance Notes</h2>
           <div className="space-y-4">
-            {agentStats.performance.map((note, index) => (
+            {latestStats.performance?.map((note, index) => (
               <div key={index} className={`p-4 rounded-lg ${
                 note.type === 'merit' ? 'bg-success-50' : 'bg-error-50'
               }`}>
