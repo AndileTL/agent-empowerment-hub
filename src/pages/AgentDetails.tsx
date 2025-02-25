@@ -16,10 +16,12 @@ import { Upload, MonitorCheck, Award, AlertCircle } from "lucide-react";
 import SupervisorMonitoring from "@/components/SupervisorMonitoring";
 import { supabase } from "@/integrations/supabase/client";
 
+type PerformanceType = "merit" | "demerit";
+
 interface PerformanceRecord {
   id: string;
   agent_id: string;
-  type: 'merit' | 'demerit';
+  type: PerformanceType;
   description: string;
   date: string;
   created_at: string;
@@ -66,7 +68,7 @@ const AgentDetails = () => {
     team_lead_group: latestStats?.team_lead_group || "",
   });
   const [meritForm, setMeritForm] = useState({
-    type: "merit" as "merit" | "demerit",
+    type: "merit" as PerformanceType,
     description: "",
     date: new Date().toISOString().split('T')[0],
   });
@@ -120,7 +122,8 @@ const AgentDetails = () => {
         description: "Agent details updated successfully",
       });
       setIsEditOpen(false);
-      mutate();
+      // Pass an empty object as the argument to mutate
+      mutate({});
     } catch (error) {
       toast({
         variant: "destructive",
@@ -158,7 +161,7 @@ const AgentDetails = () => {
       });
       
       setMeritForm({
-        type: "merit",
+        type: "merit" as PerformanceType,
         description: "",
         date: new Date().toISOString().split('T')[0],
       });
