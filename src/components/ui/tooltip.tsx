@@ -1,47 +1,62 @@
 
-import * as React from "react"
-import * as TooltipPrimitive from "@radix-ui/react-tooltip"
+import * as React from "react";
+import { cn } from "@/lib/utils";
 
-import { cn } from "@/lib/utils"
-
-const TooltipProvider = TooltipPrimitive.Provider
-
-const TooltipRoot = TooltipPrimitive.Root
-
-const TooltipTrigger = TooltipPrimitive.Trigger
-
-const TooltipContent = React.forwardRef<
-  React.ElementRef<typeof TooltipPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <TooltipPrimitive.Content
-    ref={ref}
-    sideOffset={sideOffset}
-    className={cn(
-      "z-50 overflow-hidden rounded-md border bg-popover px-3 py-1.5 text-sm text-popover-foreground shadow-md animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-      className
-    )}
-    {...props}
-  />
-))
-TooltipContent.displayName = TooltipPrimitive.Content.displayName
-
-// Create a simple Tooltip component that combines the primitive components
 interface TooltipProps {
   content: React.ReactNode;
   children: React.ReactNode;
-  className?: string;
 }
 
-const Tooltip = ({ content, children, className }: TooltipProps) => (
-  <TooltipRoot>
-    <TooltipTrigger asChild>
-      <span className="cursor-help">{children}</span>
-    </TooltipTrigger>
-    <TooltipContent className={className}>
-      {content}
-    </TooltipContent>
-  </TooltipRoot>
-);
+export function Tooltip({ content, children }: TooltipProps) {
+  const [isVisible, setIsVisible] = React.useState(false);
+  const [position, setPosition] = React.useState({ top: 0, left: 0 });
+  const childRef = React.useRef<HTMLDivElement>(null);
 
-export { Tooltip, TooltipProvider, TooltipRoot, TooltipTrigger, TooltipContent }
+  const handleMouseEnter = () => {
+    if (childRef.current) {
+      const rect = childRef.current.getBoundingClientRect();
+      setPosition({
+        top: rect.top - 10,
+        left: rect.left + rect.width / 2,
+      });
+    }
+    setIsVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsVisible(false);
+  };
+
+  return (
+    <div className="relative inline-block">
+      <div
+        ref={childRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="cursor-help"
+      >
+        {children}
+      </div>
+      {isVisible && (
+        <div
+          className={cn(
+            "absolute z-50 p-2 bg-black text-white text-xs rounded shadow-lg transition-opacity",
+            "transform -translate-x-1/2 -translate-y-full mb-2"
+          )}
+          style={{
+            top: position.top - 30,
+            left: position.left,
+            maxWidth: "200px",
+            opacity: isVisible ? 1 : 0,
+          }}
+        >
+          {content}
+          <div
+            className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-black"
+            style={{ width: 0, height: 0 }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
