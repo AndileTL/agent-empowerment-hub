@@ -186,16 +186,23 @@ export type Database = {
           comment: string | null
           created_at: string | null
           date: string
+          date_of_birth: string | null
           email: string
           group: string
           helpdesk_tickets: number | null
+          home_address: string | null
           id: string
           live_chat: number | null
           name: string | null
+          next_of_kin_name: string | null
+          next_of_kin_phone: string | null
+          phone_number: string | null
+          role: string | null
           shift_status: string
           shift_type: string
           social_tickets: number | null
           support_dns_emails: number | null
+          team_lead: string | null
           team_lead_group: string
           ticket_to_calls: number | null
           total_issues_handled: number | null
@@ -209,16 +216,23 @@ export type Database = {
           comment?: string | null
           created_at?: string | null
           date?: string
+          date_of_birth?: string | null
           email: string
           group: string
           helpdesk_tickets?: number | null
+          home_address?: string | null
           id?: string
           live_chat?: number | null
           name?: string | null
+          next_of_kin_name?: string | null
+          next_of_kin_phone?: string | null
+          phone_number?: string | null
+          role?: string | null
           shift_status: string
           shift_type: string
           social_tickets?: number | null
           support_dns_emails?: number | null
+          team_lead?: string | null
           team_lead_group: string
           ticket_to_calls?: number | null
           total_issues_handled?: number | null
@@ -232,16 +246,23 @@ export type Database = {
           comment?: string | null
           created_at?: string | null
           date?: string
+          date_of_birth?: string | null
           email?: string
           group?: string
           helpdesk_tickets?: number | null
+          home_address?: string | null
           id?: string
           live_chat?: number | null
           name?: string | null
+          next_of_kin_name?: string | null
+          next_of_kin_phone?: string | null
+          phone_number?: string | null
+          role?: string | null
           shift_status?: string
           shift_type?: string
           social_tickets?: number | null
           support_dns_emails?: number | null
+          team_lead?: string | null
           team_lead_group?: string
           ticket_to_calls?: number | null
           total_issues_handled?: number | null
