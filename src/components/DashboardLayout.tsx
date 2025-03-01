@@ -21,7 +21,7 @@ const DashboardLayout = ({
   }, {
     icon: Users,
     label: "Agent Management",
-    route: "/agent-management"
+    route: "/agents"
   }, {
     icon: LineChart,
     label: "CSR Stats",

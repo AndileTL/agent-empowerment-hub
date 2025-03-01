@@ -186,23 +186,16 @@ export type Database = {
           comment: string | null
           created_at: string | null
           date: string
-          date_of_birth: string | null
           email: string
           group: string
           helpdesk_tickets: number | null
-          home_address: string | null
           id: string
           live_chat: number | null
           name: string | null
-          next_of_kin_name: string | null
-          next_of_kin_phone: string | null
-          phone_number: string | null
-          role: string | null
           shift_status: string
           shift_type: string
           social_tickets: number | null
           support_dns_emails: number | null
-          team_lead: string | null
           team_lead_group: string
           ticket_to_calls: number | null
           total_issues_handled: number | null
@@ -216,23 +209,16 @@ export type Database = {
           comment?: string | null
           created_at?: string | null
           date?: string
-          date_of_birth?: string | null
           email: string
           group: string
           helpdesk_tickets?: number | null
-          home_address?: string | null
           id?: string
           live_chat?: number | null
           name?: string | null
-          next_of_kin_name?: string | null
-          next_of_kin_phone?: string | null
-          phone_number?: string | null
-          role?: string | null
           shift_status: string
           shift_type: string
           social_tickets?: number | null
           support_dns_emails?: number | null
-          team_lead?: string | null
           team_lead_group: string
           ticket_to_calls?: number | null
           total_issues_handled?: number | null
@@ -246,23 +232,16 @@ export type Database = {
           comment?: string | null
           created_at?: string | null
           date?: string
-          date_of_birth?: string | null
           email?: string
           group?: string
           helpdesk_tickets?: number | null
-          home_address?: string | null
           id?: string
           live_chat?: number | null
           name?: string | null
-          next_of_kin_name?: string | null
-          next_of_kin_phone?: string | null
-          phone_number?: string | null
-          role?: string | null
           shift_status?: string
           shift_type?: string
           social_tickets?: number | null
           support_dns_emails?: number | null
-          team_lead?: string | null
           team_lead_group?: string
           ticket_to_calls?: number | null
           total_issues_handled?: number | null
@@ -312,140 +291,6 @@ export type Database = {
             columns: ["module_id"]
             isOneToOne: false
             referencedRelation: "training_modules"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      call_center_metrics: {
-        Row: {
-          calls_answered: number | null
-          calls_crt: number | null
-          calls_received: number | null
-          calls_sla: number | null
-          cases_escalated: number | null
-          created_at: string | null
-          date: string
-          dialogues_classification: number | null
-          email_received: number | null
-          emails_frr: number | null
-          emails_resolved: number | null
-          emails_sas_resolved: number | null
-          id: string
-          livechat_answered: number | null
-          livechat_la: number | null
-          livechat_received: number | null
-          livechat_sla: number | null
-          major_network_outages: number | null
-          social_resolved: number | null
-          system_downtime: number | null
-          team_lead_group: string
-          ticket_to_calls: number | null
-          tickets_received: number | null
-          tickets_resolved: number | null
-          total_issues: number | null
-          walk_in: number | null
-        }
-        Insert: {
-          calls_answered?: number | null
-          calls_crt?: number | null
-          calls_received?: number | null
-          calls_sla?: number | null
-          cases_escalated?: number | null
-          created_at?: string | null
-          date?: string
-          dialogues_classification?: number | null
-          email_received?: number | null
-          emails_frr?: number | null
-          emails_resolved?: number | null
-          emails_sas_resolved?: number | null
-          id?: string
-          livechat_answered?: number | null
-          livechat_la?: number | null
-          livechat_received?: number | null
-          livechat_sla?: number | null
-          major_network_outages?: number | null
-          social_resolved?: number | null
-          system_downtime?: number | null
-          team_lead_group?: string
-          ticket_to_calls?: number | null
-          tickets_received?: number | null
-          tickets_resolved?: number | null
-          total_issues?: number | null
-          walk_in?: number | null
-        }
-        Update: {
-          calls_answered?: number | null
-          calls_crt?: number | null
-          calls_received?: number | null
-          calls_sla?: number | null
-          cases_escalated?: number | null
-          created_at?: string | null
-          date?: string
-          dialogues_classification?: number | null
-          email_received?: number | null
-          emails_frr?: number | null
-          emails_resolved?: number | null
-          emails_sas_resolved?: number | null
-          id?: string
-          livechat_answered?: number | null
-          livechat_la?: number | null
-          livechat_received?: number | null
-          livechat_sla?: number | null
-          major_network_outages?: number | null
-          social_resolved?: number | null
-          system_downtime?: number | null
-          team_lead_group?: string
-          ticket_to_calls?: number | null
-          tickets_received?: number | null
-          tickets_resolved?: number | null
-          total_issues?: number | null
-          walk_in?: number | null
-        }
-        Relationships: []
-      }
-      call_reasons: {
-        Row: {
-          account_management: number | null
-          billing_questions: number | null
-          created_at: string | null
-          date: string
-          id: string
-          metrics_id: string
-          other: number | null
-          product_information: number | null
-          service_outage: number | null
-          technical_issues: number | null
-        }
-        Insert: {
-          account_management?: number | null
-          billing_questions?: number | null
-          created_at?: string | null
-          date?: string
-          id?: string
-          metrics_id: string
-          other?: number | null
-          product_information?: number | null
-          service_outage?: number | null
-          technical_issues?: number | null
-        }
-        Update: {
-          account_management?: number | null
-          billing_questions?: number | null
-          created_at?: string | null
-          date?: string
-          id?: string
-          metrics_id?: string
-          other?: number | null
-          product_information?: number | null
-          service_outage?: number | null
-          technical_issues?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "call_reasons_metrics_id_fkey"
-            columns: ["metrics_id"]
-            isOneToOne: false
-            referencedRelation: "call_center_metrics"
             referencedColumns: ["id"]
           },
         ]

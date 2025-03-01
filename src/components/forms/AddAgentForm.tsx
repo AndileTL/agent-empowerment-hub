@@ -88,7 +88,6 @@ export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
           group: newAgent.group,
           shift_type: newAgent.shift_type,
           team_lead: newAgent.team_lead,
-          team_lead_group: 'default', // Required field based on error
           date_of_birth: newAgent.date_of_birth,
           phone_number: newAgent.phone_number,
           home_address: newAgent.home_address,
