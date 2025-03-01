@@ -1,3 +1,4 @@
+
 import {
   BrowserRouter,
   Routes,
@@ -17,7 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<DashboardLayout />}>
+        <Route path="/" element={<DashboardLayout><Home /></DashboardLayout>}>
           <Route index element={<Home />} />
           <Route path="agent" element={<Agent />} />
           <Route path="training" element={<Training />} />

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -44,6 +43,7 @@ export const AddDailyMetricsForm = ({ onSuccess, onCancel }: AddDailyMetricsForm
     dialogues_classification: 0,
     major_network_outages: 0,
     system_downtime: 0,
+    team_lead_group: 'default',
   });
 
   // Calculate the total issues handled
@@ -103,7 +103,7 @@ export const AddDailyMetricsForm = ({ onSuccess, onCancel }: AddDailyMetricsForm
       // Insert the metrics data
       const { data: metricsData, error: metricsError } = await supabase
         .from('call_center_metrics')
-        .upsert({
+        .insert({
           date: metrics.date,
           tickets_received: metrics.tickets_received,
           tickets_resolved: metrics.tickets_resolved,
@@ -127,7 +127,7 @@ export const AddDailyMetricsForm = ({ onSuccess, onCancel }: AddDailyMetricsForm
           dialogues_classification: metrics.dialogues_classification,
           major_network_outages: metrics.major_network_outages,
           system_downtime: metrics.system_downtime,
-          team_lead_group: 'default', // Required field from the schema
+          team_lead_group: metrics.team_lead_group,
         })
         .select();
 
@@ -139,7 +139,7 @@ export const AddDailyMetricsForm = ({ onSuccess, onCancel }: AddDailyMetricsForm
       if (metricsData && metricsData.length > 0) {
         const { error: reasonsError } = await supabase
           .from('call_reasons')
-          .upsert({
+          .insert({
             metrics_id: metricsData[0].id,
             date: metrics.date,
             technical_issues: callReasons.technical_issues,

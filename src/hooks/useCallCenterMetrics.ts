@@ -1,48 +1,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-export interface CallCenterMetrics {
-  id: string;
-  date: string;
-  tickets_received: number;
-  tickets_resolved: number;
-  cases_escalated: number;
-  calls_received: number;
-  calls_answered: number;
-  calls_sla: number;
-  calls_crt: number;
-  livechat_received: number;
-  livechat_answered: number;
-  livechat_sla: number;
-  livechat_la: number;
-  email_received: number;
-  emails_sas_resolved: number;
-  emails_resolved: number;
-  emails_frr: number;
-  social_resolved: number;
-  walk_in: number;
-  total_issues: number;
-  ticket_to_calls: number;
-  dialogues_classification: number;
-  major_network_outages: number;
-  system_downtime: number;
-  team_lead_group: string;
-  created_at: string;
-}
-
-export interface CallReasons {
-  id: string;
-  metrics_id: string;
-  date: string;
-  technical_issues: number;
-  billing_questions: number;
-  account_management: number;
-  product_information: number;
-  service_outage: number;
-  other: number;
-  created_at: string;
-}
+import { CallCenterMetrics, CallReasons } from "@/integrations/supabase/schema";
 
 interface UseCallCenterMetricsOptions {
   startDate?: string;
@@ -113,3 +72,5 @@ export const useCallCenterMetrics = ({ startDate, endDate }: UseCallCenterMetric
     getCallReasonsForMetrics,
   };
 };
+
+export type { CallCenterMetrics, CallReasons };

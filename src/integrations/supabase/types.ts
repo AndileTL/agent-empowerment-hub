@@ -316,6 +316,140 @@ export type Database = {
           },
         ]
       }
+      call_center_metrics: {
+        Row: {
+          calls_answered: number | null
+          calls_crt: number | null
+          calls_received: number | null
+          calls_sla: number | null
+          cases_escalated: number | null
+          created_at: string | null
+          date: string
+          dialogues_classification: number | null
+          email_received: number | null
+          emails_frr: number | null
+          emails_resolved: number | null
+          emails_sas_resolved: number | null
+          id: string
+          livechat_answered: number | null
+          livechat_la: number | null
+          livechat_received: number | null
+          livechat_sla: number | null
+          major_network_outages: number | null
+          social_resolved: number | null
+          system_downtime: number | null
+          team_lead_group: string
+          ticket_to_calls: number | null
+          tickets_received: number | null
+          tickets_resolved: number | null
+          total_issues: number | null
+          walk_in: number | null
+        }
+        Insert: {
+          calls_answered?: number | null
+          calls_crt?: number | null
+          calls_received?: number | null
+          calls_sla?: number | null
+          cases_escalated?: number | null
+          created_at?: string | null
+          date?: string
+          dialogues_classification?: number | null
+          email_received?: number | null
+          emails_frr?: number | null
+          emails_resolved?: number | null
+          emails_sas_resolved?: number | null
+          id?: string
+          livechat_answered?: number | null
+          livechat_la?: number | null
+          livechat_received?: number | null
+          livechat_sla?: number | null
+          major_network_outages?: number | null
+          social_resolved?: number | null
+          system_downtime?: number | null
+          team_lead_group?: string
+          ticket_to_calls?: number | null
+          tickets_received?: number | null
+          tickets_resolved?: number | null
+          total_issues?: number | null
+          walk_in?: number | null
+        }
+        Update: {
+          calls_answered?: number | null
+          calls_crt?: number | null
+          calls_received?: number | null
+          calls_sla?: number | null
+          cases_escalated?: number | null
+          created_at?: string | null
+          date?: string
+          dialogues_classification?: number | null
+          email_received?: number | null
+          emails_frr?: number | null
+          emails_resolved?: number | null
+          emails_sas_resolved?: number | null
+          id?: string
+          livechat_answered?: number | null
+          livechat_la?: number | null
+          livechat_received?: number | null
+          livechat_sla?: number | null
+          major_network_outages?: number | null
+          social_resolved?: number | null
+          system_downtime?: number | null
+          team_lead_group?: string
+          ticket_to_calls?: number | null
+          tickets_received?: number | null
+          tickets_resolved?: number | null
+          total_issues?: number | null
+          walk_in?: number | null
+        }
+        Relationships: []
+      }
+      call_reasons: {
+        Row: {
+          account_management: number | null
+          billing_questions: number | null
+          created_at: string | null
+          date: string
+          id: string
+          metrics_id: string
+          other: number | null
+          product_information: number | null
+          service_outage: number | null
+          technical_issues: number | null
+        }
+        Insert: {
+          account_management?: number | null
+          billing_questions?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          metrics_id: string
+          other?: number | null
+          product_information?: number | null
+          service_outage?: number | null
+          technical_issues?: number | null
+        }
+        Update: {
+          account_management?: number | null
+          billing_questions?: number | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          metrics_id?: string
+          other?: number | null
+          product_information?: number | null
+          service_outage?: number | null
+          technical_issues?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_reasons_metrics_id_fkey"
+            columns: ["metrics_id"]
+            isOneToOne: false
+            referencedRelation: "call_center_metrics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       certifications: {
         Row: {
           created_at: string | null
