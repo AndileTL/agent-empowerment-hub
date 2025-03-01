@@ -24,7 +24,7 @@ const TooltipContent = React.forwardRef<
 ))
 TooltipContent.displayName = TooltipPrimitive.Content.displayName
 
-interface TooltipProps extends React.ComponentProps<typeof Tooltip> {
+interface TooltipProps extends React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Root> {
   content: React.ReactNode;
 }
 
