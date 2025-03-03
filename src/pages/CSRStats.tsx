@@ -1,9 +1,10 @@
+
 import { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download, Upload, Filter, Edit2, Save } from "lucide-react";
+import { Download, Upload, Filter, Edit2, Save, Plus } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -18,6 +19,7 @@ import { useCSRStats } from "@/hooks/useCSRStats";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useShiftRoster } from "@/hooks/useShiftRoster";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 
 const CSRStats = () => {
   const [startDate, setStartDate] = useState<string>(
@@ -99,21 +101,44 @@ const CSRStats = () => {
     }
   };
 
-  const handleCreateShift = async (data: any) => {
-    try {
-      await createShift(data);
-      toast({
-        title: "Success",
-        description: "Shift created successfully",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to create shift",
-        variant: "destructive",
-      });
+  // SLA pie chart data
+  const slaPieData = [
+    { name: "Phone SLA", value: 95, color: "#8884d8" },
+    { name: "Chat SLA", value: 88, color: "#82ca9d" },
+    { name: "Email SLA", value: 92, color: "#ffc658" }
+  ];
+
+  // Mock data for Call Center Metrics table
+  const callCenterMetricsData = [
+    {
+      date: "2023-07-01",
+      tickets: { ticketsReceived: 245, ticketsResolved: 230, casesEscalated: 15 },
+      calls: { callsReceived: 350, callsAnswered: 330, callsSLA: 95, callsCAR: 94 },
+      liveChat: { liveChatReceived: 120, liveChatAnswered: 115, liveChatSLA: 96, liveChatLT: 89 },
+      email: { emailsReceived: 230, emailsResponseTime: "2h 15m", emailsResolved: 210, emailsFRR: 91 },
+      social: { socialResolved: 45 },
+      walkIns: 25,
+      totalIssues: 770,
+      ticketToCalls: 0.69,
+      dialoguesClassification: 98,
+      majorOutages: 1,
+      systemDowntime: "0h 45m"
+    },
+    {
+      date: "2023-07-02",
+      tickets: { ticketsReceived: 230, ticketsResolved: 210, casesEscalated: 20 },
+      calls: { callsReceived: 320, callsAnswered: 300, callsSLA: 94, callsCAR: 93 },
+      liveChat: { liveChatReceived: 110, liveChatAnswered: 105, liveChatSLA: 95, liveChatLT: 88 },
+      email: { emailsReceived: 210, emailsResponseTime: "2h 30m", emailsResolved: 190, emailsFRR: 90 },
+      social: { socialResolved: 40 },
+      walkIns: 20,
+      totalIssues: 700,
+      ticketToCalls: 0.72,
+      dialoguesClassification: 97,
+      majorOutages: 0,
+      systemDowntime: "0h 0m"
     }
-  };
+  ];
 
   return (
     <DashboardLayout>
