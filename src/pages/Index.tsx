@@ -1,8 +1,13 @@
+
 import DashboardLayout from "@/components/DashboardLayout";
 import { useCSRStats } from "@/hooks/useCSRStats";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import StatsCard from "@/components/StatsCard";
-import { Clock, ThumbsUp, PhoneCall, Calendar, Phone, ExternalLink, Users, MessageSquare } from "lucide-react";
+import { 
+  Clock, ThumbsUp, PhoneCall, Calendar, Phone, ExternalLink, Users, 
+  MessageSquare, AlertTriangle, Server, Network, Ticket, PlugZap, 
+  ChartLine, BarChart2, Table as TableIcon, Plus
+} from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
