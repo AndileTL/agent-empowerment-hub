@@ -1,4 +1,3 @@
-
 import DashboardLayout from "@/components/DashboardLayout";
 import { useCSRStats } from "@/hooks/useCSRStats";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,17 +5,24 @@ import StatsCard from "@/components/StatsCard";
 import { 
   Clock, ThumbsUp, PhoneCall, Calendar, Phone, ExternalLink, Users, 
   MessageSquare, AlertTriangle, Server, Network, Ticket, PlugZap, 
-  ChartLine, BarChart2, Table as TableIcon, Plus
+  ChartLine, BarChart2, Table as TableIcon, Plus,
+  Activity, TrendingUp, TrendingDown, Info
 } from "lucide-react";
 import { useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid } from "recharts";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 const Home = () => {
   const { data: csrStats } = useCSRStats();
   const [timeFilter, setTimeFilter] = useState("Last Week");
   const [agentFilter, setAgentFilter] = useState("All Agents");
   const [chartType, setChartType] = useState("pie");
+  const [insightsTab, setInsightsTab] = useState("network");
+  const [mainTab, setMainTab] = useState("dashboard");
   
   // Key metrics data
   const performanceMetrics = {
@@ -143,6 +149,142 @@ const Home = () => {
     },
   ];
 
+  // Network/System Outage data
+  const outageData = [
+    {
+      id: "INC12345",
+      reason: "Database Server Down",
+      severity: "critical",
+      startTime: "2023-05-15 08:30 AM",
+      affectedServices: ["CRM", "Billing System"],
+      estimatedResolution: "2023-05-15 12:30 PM",
+      updates: "Engineers working on restoring service. Backup systems engaged."
+    },
+    {
+      id: "INC12346",
+      reason: "Internet Connectivity Issue",
+      severity: "high",
+      startTime: "2023-05-15 09:15 AM",
+      affectedServices: ["Email", "VoIP"],
+      estimatedResolution: "2023-05-15 11:00 AM",
+      updates: "Internet service provider notified. Estimated fix in 2 hours."
+    },
+    {
+      id: "INC12347",
+      reason: "VPN Connection Failure",
+      severity: "medium",
+      startTime: "2023-05-15 10:00 AM",
+      affectedServices: ["Remote Access"],
+      estimatedResolution: "2023-05-15 02:00 PM",
+      updates: "Troubleshooting in progress."
+    }
+  ];
+
+  // SLA Data
+  const slaData = [
+    { 
+      month: "Jan", 
+      phone: 95, 
+      chat: 92, 
+      email: 88, 
+      target: 90 
+    },
+    { 
+      month: "Feb", 
+      phone: 94, 
+      chat: 91, 
+      email: 89, 
+      target: 90 
+    },
+    { 
+      month: "Mar", 
+      phone: 96, 
+      chat: 94, 
+      email: 91, 
+      target: 90 
+    },
+    { 
+      month: "Apr", 
+      phone: 93, 
+      chat: 90, 
+      email: 87, 
+      target: 90 
+    },
+    { 
+      month: "May", 
+      phone: 92, 
+      chat: 89, 
+      email: 85, 
+      target: 90 
+    }
+  ];
+
+  // CAR Data
+  const carData = [
+    {
+      id: "CAR0001",
+      ticketRef: "INC12340",
+      issue: "Repeated CRM timeouts",
+      rootCause: "Database query optimization needed",
+      actions: "Implemented query caching and indexing",
+      responsible: "IT Infrastructure",
+      completion: "2023-04-28",
+      status: "Closed"
+    },
+    {
+      id: "CAR0002",
+      ticketRef: "INC12341",
+      issue: "Customer data not syncing",
+      rootCause: "API rate limiting",
+      actions: "Implemented batch processing",
+      responsible: "Development Team",
+      completion: "2023-05-10",
+      status: "Open"
+    },
+    {
+      id: "CAR0003",
+      ticketRef: "INC12342",
+      issue: "Call transfer failures",
+      rootCause: "VoIP server configuration",
+      actions: "Updated SIP settings",
+      responsible: "Telecom Team",
+      completion: "2023-05-12",
+      status: "Pending"
+    }
+  ];
+
+  // Live Chat SLA Metrics
+  const chatSlaMetrics = {
+    avgWaitTime: "45s",
+    avgHandleTime: "8m 20s",
+    meetingSla: "88%",
+    activeChats: 24,
+    waitingChats: 5
+  };
+
+  // Email SLA Metrics
+  const emailSlaMetrics = {
+    avgResponseTime: "2h 15m",
+    meetingSla: "92%",
+    inQueue: 42,
+    resolved: 156
+  };
+
+  const getSeverityClass = (severity) => {
+    switch (severity) {
+      case "critical":
+        return "bg-red-500 text-white";
+      case "high":
+        return "bg-orange-500 text-white";
+      case "medium":
+        return "bg-yellow-500 text-black";
+      case "low":
+        return "bg-blue-500 text-white";
+      default:
+        return "bg-gray-500 text-white";
+    }
+  };
+
   return (
     <DashboardLayout>
       <div className="container mx-auto p-6 space-y-6 animate-fade-in">
@@ -174,214 +316,603 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Key Metrics Section */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Key Metrics</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            <StatsCard
-              title="Average Handling Time"
-              value={performanceMetrics.handlingTime.value}
-              icon={<Clock />}
-              trend={performanceMetrics.handlingTime.trend}
-              className="bg-white"
-            />
-            <StatsCard
-              title="Customer Satisfaction"
-              value={performanceMetrics.customerSatisfaction.value + "%"}
-              icon={<ThumbsUp />}
-              trend={performanceMetrics.customerSatisfaction.trend}
-              className="bg-white"
-            />
-            <StatsCard
-              title="First Call Resolution"
-              value={performanceMetrics.firstCallResolution.value + "%"}
-              icon={<PhoneCall />}
-              trend={performanceMetrics.firstCallResolution.trend}
-              className="bg-white"
-            />
-            <StatsCard
-              title="Schedule Adherence"
-              value={performanceMetrics.scheduleAdherence.value + "%"}
-              icon={<Calendar />}
-              trend={performanceMetrics.scheduleAdherence.trend}
-              className="bg-white"
-            />
-            <StatsCard
-              title="Call Volume"
-              value={performanceMetrics.callVolume.value}
-              icon={<Phone />}
-              trend={performanceMetrics.callVolume.trend}
-              className="bg-white"
-            />
-            <StatsCard
-              title="Service Level"
-              value={performanceMetrics.serviceLevel.value}
-              icon={<Users />}
-              trend={performanceMetrics.serviceLevel.trend}
-              className="bg-white"
-            />
-          </div>
-        </section>
+        {/* Main Dashboard Tabs */}
+        <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
+          <TabsList className="mb-4">
+            <TabsTrigger value="dashboard">Main Dashboard</TabsTrigger>
+            <TabsTrigger value="insights">Contact Center Insights</TabsTrigger>
+          </TabsList>
 
-        {/* Call Reason Analysis Section */}
-        <section>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Call Reason Analysis</h2>
-            <div className="flex gap-2">
-              <button 
-                className={`px-3 py-1 rounded-md ${chartType === 'pie' ? 'bg-primary-500 text-white' : 'bg-gray-200'}`}
-                onClick={() => setChartType('pie')}
-              >
-                Pie Chart
-              </button>
-              <button 
-                className={`px-3 py-1 rounded-md ${chartType === 'bar' ? 'bg-primary-500 text-white' : 'bg-gray-200'}`}
-                onClick={() => setChartType('bar')}
-              >
-                Bar Chart
-              </button>
-            </div>
-          </div>
-          <Card className="p-6">
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                {chartType === 'pie' ? (
-                  <PieChart>
-                    <Pie
-                      data={callReasonData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      outerRadius={100}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {callReasonData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${value}%`} />
-                    <Legend layout="vertical" verticalAlign="middle" align="right" />
-                  </PieChart>
-                ) : (
-                  <BarChart
-                    data={callReasonData}
-                    margin={{
-                      top: 5,
-                      right: 30,
-                      left: 20,
-                      bottom: 5,
-                    }}
+          {/* Main Dashboard Content */}
+          <TabsContent value="dashboard" className="space-y-6">
+            {/* Key Metrics Section */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Key Metrics</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
+                <StatsCard
+                  title="Average Handling Time"
+                  value={performanceMetrics.handlingTime.value}
+                  icon={<Clock />}
+                  trend={performanceMetrics.handlingTime.trend}
+                  className="bg-white"
+                />
+                <StatsCard
+                  title="Customer Satisfaction"
+                  value={performanceMetrics.customerSatisfaction.value + "%"}
+                  icon={<ThumbsUp />}
+                  trend={performanceMetrics.customerSatisfaction.trend}
+                  className="bg-white"
+                />
+                <StatsCard
+                  title="First Call Resolution"
+                  value={performanceMetrics.firstCallResolution.value + "%"}
+                  icon={<PhoneCall />}
+                  trend={performanceMetrics.firstCallResolution.trend}
+                  className="bg-white"
+                />
+                <StatsCard
+                  title="Schedule Adherence"
+                  value={performanceMetrics.scheduleAdherence.value + "%"}
+                  icon={<Calendar />}
+                  trend={performanceMetrics.scheduleAdherence.trend}
+                  className="bg-white"
+                />
+                <StatsCard
+                  title="Call Volume"
+                  value={performanceMetrics.callVolume.value}
+                  icon={<Phone />}
+                  trend={performanceMetrics.callVolume.trend}
+                  className="bg-white"
+                />
+                <StatsCard
+                  title="Service Level"
+                  value={performanceMetrics.serviceLevel.value}
+                  icon={<Users />}
+                  trend={performanceMetrics.serviceLevel.trend}
+                  className="bg-white"
+                />
+              </div>
+            </section>
+
+            {/* Call Reason Analysis Section */}
+            <section>
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-semibold">Call Reason Analysis</h2>
+                <div className="flex gap-2">
+                  <button 
+                    className={`px-3 py-1 rounded-md ${chartType === 'pie' ? 'bg-primary-500 text-white' : 'bg-gray-200'}`}
+                    onClick={() => setChartType('pie')}
                   >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip formatter={(value) => `${value}%`} />
-                    <Legend />
-                    <Bar dataKey="value" name="Percentage" fill="#8884d8">
-                      {callReasonData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Bar>
-                  </BarChart>
-                )}
-              </ResponsiveContainer>
-            </div>
-          </Card>
-        </section>
-
-        {/* Team Performance Table */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Team Performance</h2>
-          <Card className="p-0 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Team Name</TableHead>
-                  <TableHead>Average Handling Time</TableHead>
-                  <TableHead>Customer Satisfaction</TableHead>
-                  <TableHead>First Call Resolution</TableHead>
-                  <TableHead>Service Level Agreement</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {teamPerformance.map((team, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">{team.name}</TableCell>
-                    <TableCell>{team.aht}</TableCell>
-                    <TableCell>{team.csat}</TableCell>
-                    <TableCell>{team.fcr}</TableCell>
-                    <TableCell>{team.sla}</TableCell>
-                    <TableCell>
-                      <button className="text-blue-600 hover:underline">View Details</button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </section>
-
-        {/* Channel Performance */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Channel Performance</h2>
-          <Card className="p-0 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Channel</TableHead>
-                  <TableHead>Average Handling Time</TableHead>
-                  <TableHead>Customer Satisfaction</TableHead>
-                  <TableHead>First Call Resolution</TableHead>
-                  <TableHead>Service Level Agreement</TableHead>
-                  <TableHead>Call Volume</TableHead>
-                  <TableHead>Top Performer Agent</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {channelPerformance.map((channel, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
-                      <div className="flex items-center gap-2">
-                        {channel.icon}
-                        {channel.channel}
-                      </div>
-                    </TableCell>
-                    <TableCell>{channel.aht}</TableCell>
-                    <TableCell>{channel.csat}</TableCell>
-                    <TableCell>{channel.fcr}</TableCell>
-                    <TableCell>{channel.sla}</TableCell>
-                    <TableCell>{channel.volume}</TableCell>
-                    <TableCell>{channel.topPerformer}</TableCell>
-                    <TableCell>
-                      <button className="text-blue-600 hover:underline">View Details</button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </Card>
-        </section>
-
-        {/* Recent Activities - keeping this from the original dashboard */}
-        <section>
-          <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
-          <Card className="p-6">
-            <div className="space-y-4">
-              {recentActivities.map((activity, index) => (
-                <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-900">{activity.message}</p>
-                    <p className="text-xs text-gray-500 mt-1">{activity.timestamp}</p>
-                  </div>
+                    Pie Chart
+                  </button>
+                  <button 
+                    className={`px-3 py-1 rounded-md ${chartType === 'bar' ? 'bg-primary-500 text-white' : 'bg-gray-200'}`}
+                    onClick={() => setChartType('bar')}
+                  >
+                    Bar Chart
+                  </button>
                 </div>
-              ))}
+              </div>
+              <Card className="p-6">
+                <div className="h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    {chartType === 'pie' ? (
+                      <PieChart>
+                        <Pie
+                          data={callReasonData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={true}
+                          outerRadius={100}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {callReasonData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Pie>
+                        <Tooltip formatter={(value) => `${value}%`} />
+                        <Legend layout="vertical" verticalAlign="middle" align="right" />
+                      </PieChart>
+                    ) : (
+                      <BarChart
+                        data={callReasonData}
+                        margin={{
+                          top: 5,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip formatter={(value) => `${value}%`} />
+                        <Legend />
+                        <Bar dataKey="value" name="Percentage" fill="#8884d8">
+                          {callReasonData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={entry.color} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    )}
+                  </ResponsiveContainer>
+                </div>
+              </Card>
+            </section>
+
+            {/* Team Performance Table */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Team Performance</h2>
+              <Card className="p-0 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Team Name</TableHead>
+                      <TableHead>Average Handling Time</TableHead>
+                      <TableHead>Customer Satisfaction</TableHead>
+                      <TableHead>First Call Resolution</TableHead>
+                      <TableHead>Service Level Agreement</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {teamPerformance.map((team, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">{team.name}</TableCell>
+                        <TableCell>{team.aht}</TableCell>
+                        <TableCell>{team.csat}</TableCell>
+                        <TableCell>{team.fcr}</TableCell>
+                        <TableCell>{team.sla}</TableCell>
+                        <TableCell>
+                          <button className="text-blue-600 hover:underline">View Details</button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </section>
+
+            {/* Channel Performance */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Channel Performance</h2>
+              <Card className="p-0 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Channel</TableHead>
+                      <TableHead>Average Handling Time</TableHead>
+                      <TableHead>Customer Satisfaction</TableHead>
+                      <TableHead>First Call Resolution</TableHead>
+                      <TableHead>Service Level Agreement</TableHead>
+                      <TableHead>Call Volume</TableHead>
+                      <TableHead>Top Performer Agent</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {channelPerformance.map((channel, index) => (
+                      <TableRow key={index}>
+                        <TableCell className="font-medium">
+                          <div className="flex items-center gap-2">
+                            {channel.icon}
+                            {channel.channel}
+                          </div>
+                        </TableCell>
+                        <TableCell>{channel.aht}</TableCell>
+                        <TableCell>{channel.csat}</TableCell>
+                        <TableCell>{channel.fcr}</TableCell>
+                        <TableCell>{channel.sla}</TableCell>
+                        <TableCell>{channel.volume}</TableCell>
+                        <TableCell>{channel.topPerformer}</TableCell>
+                        <TableCell>
+                          <button className="text-blue-600 hover:underline">View Details</button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Card>
+            </section>
+
+            {/* Recent Activities */}
+            <section>
+              <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
+              <Card className="p-6">
+                <div className="space-y-4">
+                  {recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-900">{activity.message}</p>
+                        <p className="text-xs text-gray-500 mt-1">{activity.timestamp}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            </section>
+          </TabsContent>
+
+          {/* Contact Center Insights Tab Content */}
+          <TabsContent value="insights" className="space-y-6">
+            <div className="mb-4">
+              <Tabs value={insightsTab} onValueChange={setInsightsTab}>
+                <TabsList>
+                  <TabsTrigger value="network">
+                    <AlertTriangle className="w-4 h-4 mr-2" />
+                    Network/System Outages
+                  </TabsTrigger>
+                  <TabsTrigger value="sla">
+                    <Activity className="w-4 h-4 mr-2" />
+                    SLA & CAR Viewing
+                  </TabsTrigger>
+                  <TabsTrigger value="live">
+                    <TrendingUp className="w-4 h-4 mr-2" />
+                    Live SLA Monitoring
+                  </TabsTrigger>
+                </TabsList>
+                
+                {/* Network/System Outage Content */}
+                <TabsContent value="network" className="space-y-4 mt-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-lg font-semibold">Active Outages</h3>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Outage
+                    </Button>
+                  </div>
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {outageData.map((outage) => (
+                          <div key={outage.id} className="border rounded-lg overflow-hidden">
+                            <div className={`flex justify-between items-center p-4 ${getSeverityClass(outage.severity)}`}>
+                              <div className="flex items-center gap-2">
+                                <AlertTriangle className="h-5 w-5" />
+                                <span className="font-semibold">{outage.reason}</span>
+                              </div>
+                              <span className="text-sm font-medium px-2 py-1 bg-white/20 rounded">
+                                {outage.id}
+                              </span>
+                            </div>
+                            <div className="p-4 bg-white">
+                              <div className="grid grid-cols-2 gap-4 mb-2">
+                                <div>
+                                  <p className="text-sm text-gray-500">Start Time</p>
+                                  <p className="font-medium">{outage.startTime}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-500">Est. Resolution</p>
+                                  <p className="font-medium">{outage.estimatedResolution}</p>
+                                </div>
+                              </div>
+                              <div className="mb-2">
+                                <p className="text-sm text-gray-500">Affected Services</p>
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                  {outage.affectedServices.map((service, idx) => (
+                                    <span key={idx} className="px-2 py-1 bg-gray-100 rounded text-sm">
+                                      {service}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                              <div>
+                                <p className="text-sm text-gray-500">Updates</p>
+                                <p className="text-sm mt-1">{outage.updates}</p>
+                              </div>
+                              <Button variant="outline" className="mt-3 w-full">View Details</Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                
+                {/* SLA & CAR Viewing Content */}
+                <TabsContent value="sla" className="space-y-4 mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <div className="flex justify-between items-center">
+                          <CardTitle>SLA Performance</CardTitle>
+                          <Button variant="outline" size="sm">
+                            <Plus className="h-4 w-4 mr-2" />
+                            Configure SLA
+                          </Button>
+                        </div>
+                        <CardDescription>Monthly performance across channels</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="h-[300px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={slaData}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="month" />
+                              <YAxis />
+                              <Tooltip />
+                              <Legend />
+                              <Bar dataKey="phone" name="Phone" fill="#8884d8" />
+                              <Bar dataKey="chat" name="Chat" fill="#82ca9d" />
+                              <Bar dataKey="email" name="Email" fill="#ffc658" />
+                            </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="mt-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="space-y-2 w-1/3">
+                              <label className="text-sm font-medium">Start Date</label>
+                              <Input type="date" />
+                            </div>
+                            <div className="space-y-2 w-1/3">
+                              <label className="text-sm font-medium">End Date</label>
+                              <Input type="date" />
+                            </div>
+                            <div className="space-y-2 w-1/3 ml-2">
+                              <label className="text-sm font-medium">Channel</label>
+                              <Select>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="All Channels" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="all">All Channels</SelectItem>
+                                  <SelectItem value="phone">Phone</SelectItem>
+                                  <SelectItem value="chat">Chat</SelectItem>
+                                  <SelectItem value="email">Email</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                          <Button className="w-full mt-2">Apply Filters</Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <div className="flex justify-between items-center">
+                          <CardTitle>Corrective Action Reports (CAR)</CardTitle>
+                          <Button variant="outline" size="sm">
+                            <Plus className="h-4 w-4 mr-2" />
+                            Add CAR
+                          </Button>
+                        </div>
+                        <CardDescription>Recent corrective actions</CardDescription>
+                      </CardHeader>
+                      <CardContent className="p-0">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>ID</TableHead>
+                              <TableHead>Issue</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {carData.map((car) => (
+                              <TableRow key={car.id}>
+                                <TableCell className="font-medium">{car.id}</TableCell>
+                                <TableCell>{car.issue}</TableCell>
+                                <TableCell>
+                                  <span className={`px-2 py-1 rounded text-xs ${
+                                    car.status === "Closed" ? "bg-green-100 text-green-800" : 
+                                    car.status === "Open" ? "bg-blue-100 text-blue-800" : 
+                                    "bg-yellow-100 text-yellow-800"
+                                  }`}>
+                                    {car.status}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <Button variant="ghost" size="sm">View</Button>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>CAR Details</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <p className="text-sm text-gray-500">Ticket Reference</p>
+                            <p className="font-medium">{carData[0].ticketRef}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Responsible Party</p>
+                            <p className="font-medium">{carData[0].responsible}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Completion Date</p>
+                            <p className="font-medium">{carData[0].completion}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-gray-500">Status</p>
+                            <p className="font-medium">{carData[0].status}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Issue Summary</p>
+                          <p className="text-sm mt-1">{carData[0].issue}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Root Cause Analysis</p>
+                          <p className="text-sm mt-1">{carData[0].rootCause}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Corrective Actions</p>
+                          <p className="text-sm mt-1">{carData[0].actions}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+                
+                {/* Live SLA Monitoring Content */}
+                <TabsContent value="live" className="mt-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <MessageSquare className="h-5 w-5 mr-2" />
+                          Live Chat SLA
+                        </CardTitle>
+                        <CardDescription>Real-time chat performance metrics</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Average Wait Time</p>
+                            <p className="text-2xl font-bold">{chatSlaMetrics.avgWaitTime}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Average Handle Time</p>
+                            <p className="text-2xl font-bold">{chatSlaMetrics.avgHandleTime}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Meeting SLA</p>
+                            <p className="text-2xl font-bold">{chatSlaMetrics.meetingSla}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Active Chats</p>
+                            <div className="flex items-end gap-2">
+                              <p className="text-2xl font-bold">{chatSlaMetrics.activeChats}</p>
+                              <p className="text-sm text-gray-500">
+                                ({chatSlaMetrics.waitingChats} waiting)
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center">
+                          <ExternalLink className="h-5 w-5 mr-2" />
+                          Email SLA
+                        </CardTitle>
+                        <CardDescription>Real-time email performance metrics</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Average Response Time</p>
+                            <p className="text-2xl font-bold">{emailSlaMetrics.avgResponseTime}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Meeting SLA</p>
+                            <p className="text-2xl font-bold">{emailSlaMetrics.meetingSla}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Emails in Queue</p>
+                            <p className="text-2xl font-bold">{emailSlaMetrics.inQueue}</p>
+                          </div>
+                          <div className="border rounded-lg p-4">
+                            <p className="text-sm text-gray-500 mb-1">Resolved Today</p>
+                            <p className="text-2xl font-bold">{emailSlaMetrics.resolved}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card className="mt-4">
+                    <CardHeader>
+                      <div className="flex justify-between items-center">
+                        <CardTitle>Live Agent Performance</CardTitle>
+                        <Select defaultValue="all">
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Channel" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Channels</SelectItem>
+                            <SelectItem value="chat">Live Chat</SelectItem>
+                            <SelectItem value="email">Email</SelectItem>
+                            <SelectItem value="phone">Phone</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Agent</TableHead>
+                            <TableHead>Channel</TableHead>
+                            <TableHead>Active</TableHead>
+                            <TableHead>Completed</TableHead>
+                            <TableHead>Avg Time</TableHead>
+                            <TableHead>SLA Status</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          <TableRow>
+                            <TableCell>Sarah Johnson</TableCell>
+                            <TableCell>
+                              <span className="flex items-center">
+                                <MessageSquare className="h-4 w-4 mr-1" /> Chat
+                              </span>
+                            </TableCell>
+                            <TableCell>3</TableCell>
+                            <TableCell>24</TableCell>
+                            <TableCell>6m 40s</TableCell>
+                            <TableCell>
+                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                Meeting SLA
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>Michael Chen</TableCell>
+                            <TableCell>
+                              <span className="flex items-center">
+                                <ExternalLink className="h-4 w-4 mr-1" /> Email
+                              </span>
+                            </TableCell>
+                            <TableCell>12</TableCell>
+                            <TableCell>31</TableCell>
+                            <TableCell>1h 45m</TableCell>
+                            <TableCell>
+                              <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
+                                At Risk
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell>Jessica Smith</TableCell>
+                            <TableCell>
+                              <span className="flex items-center">
+                                <Phone className="h-4 w-4 mr-1" /> Phone
+                              </span>
+                            </TableCell>
+                            <TableCell>1</TableCell>
+                            <TableCell>18</TableCell>
+                            <TableCell>4m 20s</TableCell>
+                            <TableCell>
+                              <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                Meeting SLA
+                              </span>
+                            </TableCell>
+                          </TableRow>
+                        </TableBody>
+                      </Table>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              </Tabs>
             </div>
-          </Card>
-        </section>
+          </TabsContent>
+        </Tabs>
       </div>
     </DashboardLayout>
   );
