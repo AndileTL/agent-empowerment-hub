@@ -30,6 +30,13 @@ export const teamLeads = [
   { value: "mike_jones", label: "Mike Jones" },
 ];
 
+export const teamLeadGroups = [
+  { value: "technical", label: "Technical" },
+  { value: "sales", label: "Sales" },
+  { value: "billing", label: "Billing" },
+  { value: "support", label: "Support" },
+];
+
 export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
   const [newAgent, setNewAgent] = useState({
     name: "",
@@ -38,6 +45,7 @@ export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
     group: "",
     shift_type: "",
     team_lead: "",
+    team_lead_group: "", // Added missing field
     date_of_birth: "",
     phone_number: "",
     home_address: "",
@@ -49,7 +57,7 @@ export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
   const handleAddAgent = async () => {
     try {
       if (!newAgent.name || !newAgent.email || !newAgent.role || !newAgent.group || 
-          !newAgent.shift_type || !newAgent.team_lead) {
+          !newAgent.shift_type || !newAgent.team_lead || !newAgent.team_lead_group) { // Updated validation
         toast({
           variant: "destructive",
           title: "Error",
@@ -88,6 +96,7 @@ export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
           group: newAgent.group,
           shift_type: newAgent.shift_type,
           team_lead: newAgent.team_lead,
+          team_lead_group: newAgent.team_lead_group, // Added missing field
           date_of_birth: newAgent.date_of_birth,
           phone_number: newAgent.phone_number,
           home_address: newAgent.home_address,
@@ -220,6 +229,26 @@ export const AddAgentForm = ({ onSuccess, onCancel }: AddAgentFormProps) => {
             {teamLeads.map((lead) => (
               <SelectItem key={lead.value} value={lead.value}>
                 {lead.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
+      {/* Added Team Lead Group field */}
+      <div className="space-y-2">
+        <Label htmlFor="team_lead_group">Team Lead Group*</Label>
+        <Select
+          value={newAgent.team_lead_group}
+          onValueChange={(value) => setNewAgent({ ...newAgent, team_lead_group: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select team lead group" />
+          </SelectTrigger>
+          <SelectContent>
+            {teamLeadGroups.map((group) => (
+              <SelectItem key={group.value} value={group.value}>
+                {group.label}
               </SelectItem>
             ))}
           </SelectContent>
