@@ -1,19 +1,15 @@
-
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings, Award, LineChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
-
 const DashboardLayout = ({
   children
 }: DashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
   const menuItems = [{
     icon: BarChart2,
     label: "Dashboard",
@@ -43,9 +39,7 @@ const DashboardLayout = ({
     label: "Settings",
     route: "/settings"
   }];
-
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-50">
         <Sidebar className="border-r border-gray-200">
           <SidebarContent className="p-4 rounded-sm">
@@ -58,27 +52,19 @@ const DashboardLayout = ({
               </SidebarTrigger>
             </div>
             <nav className="space-y-2">
-              {menuItems.map(item => (
-                <Link 
-                  key={item.label} 
-                  to={item.route} 
-                  className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-100 transition-colors"
-                >
+              {menuItems.map(item => <Link key={item.label} to={item.route} className="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-700 hover:bg-primary-100 transition-colors">
                   <item.icon className="h-5 w-5" />
                   <span>{item.label}</span>
-                </Link>
-              ))}
+                </Link>)}
             </nav>
           </SidebarContent>
         </Sidebar>
-        <main className="flex-1 p-8">
+        <main className="flex-1 p-8 rounded">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default DashboardLayout;
