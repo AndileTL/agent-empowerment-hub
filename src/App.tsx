@@ -8,6 +8,7 @@ import Index from "@/pages/Index";
 import AgentManagement from "@/pages/AgentManagement";
 import AgentDetails from "@/pages/AgentDetails";
 import CSRStats from "@/pages/CSRStats";
+import ContactCenterPerformance from "@/pages/ContactCenterPerformance";
 import Recognition from "@/pages/Recognition";
 import Training from "@/pages/Training";
 import QAScoring from "@/pages/QAScoring";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/agents" element={<AgentManagement />} />
             <Route path="/agents/:id" element={<AgentDetails />} />
             <Route path="/csr-stats" element={<CSRStats />} />
+            <Route path="/cc-performance" element={<ContactCenterPerformance />} />
             <Route path="/recognition" element={<Recognition />} />
             <Route path="/training" element={<Training />} />
             <Route path="/qa-scoring" element={<QAScoring />} />

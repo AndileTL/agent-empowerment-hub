@@ -1,5 +1,6 @@
+
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings, Award, LineChart } from "lucide-react";
+import { Menu, BarChart2, Users, BookOpen, CheckSquare, Settings, Award, LineChart, Headset } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -22,6 +23,10 @@ const DashboardLayout = ({
     icon: LineChart,
     label: "CSR Stats",
     route: "/csr-stats"
+  }, {
+    icon: Headset,
+    label: "Contact Center Performance",
+    route: "/cc-performance"
   }, {
     icon: BookOpen,
     label: "Training Lounge",
