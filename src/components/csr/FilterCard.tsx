@@ -13,29 +13,31 @@ interface FilterCardProps {
 
 const FilterCard = ({ startDate, endDate, setStartDate, setEndDate }: FilterCardProps) => {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Filters</CardTitle>
+    <Card className="shadow-md">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-lg font-medium">Filters</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex gap-4 items-end">
+        <div className="flex flex-wrap gap-4 items-end">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Start Date</label>
+            <label className="text-sm font-medium text-gray-700">Start Date</label>
             <Input
               type="date"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
+              className="border-gray-300 focus:border-primary-500 focus:ring-primary-500"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">End Date</label>
+            <label className="text-sm font-medium text-gray-700">End Date</label>
             <Input
               type="date"
               value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
+              className="border-gray-300 focus:border-primary-500 focus:ring-primary-500"
             />
           </div>
-          <Button variant="outline">
+          <Button className="bg-primary-500 hover:bg-primary-600 text-white">
             <Filter className="mr-2 h-4 w-4" />
             Apply Filters
           </Button>

@@ -63,13 +63,22 @@ const CSRStats = () => {
   return (
     <DashboardLayout>
       <div className="space-y-8">
+        <div className="header-gradient mb-8">
+          <div className="max-w-4xl">
+            <h1 className="text-3xl font-bold">Greetings!</h1>
+            <p className="mt-2 text-gray-100 max-w-2xl">
+              Follow the setup wizard that will guide you through the remaining steps to your first sale
+            </p>
+          </div>
+        </div>
+
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">CSR Statistics</h1>
-            <p className="mt-2 text-gray-600">Monitor agent performance metrics and manage shifts</p>
+            <h1 className="text-2xl font-bold text-gray-900">CSR Statistics</h1>
+            <p className="mt-1 text-gray-600">Monitor agent performance metrics and manage shifts</p>
           </div>
-          <div className="flex gap-4">
-            <Button onClick={handleExport}>
+          <div className="flex gap-3">
+            <Button onClick={handleExport} variant="outline" className="border-gray-300 bg-white hover:bg-gray-50">
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
@@ -80,7 +89,7 @@ const CSRStats = () => {
                 onChange={handleImport}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <Button variant="outline">
+              <Button variant="outline" className="border-gray-300 bg-white hover:bg-gray-50">
                 <Upload className="mr-2 h-4 w-4" />
                 Import
               </Button>
@@ -88,13 +97,17 @@ const CSRStats = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="stats">
-          <TabsList>
-            <TabsTrigger value="stats">Performance Statistics</TabsTrigger>
-            <TabsTrigger value="shifts">Shift Roster</TabsTrigger>
+        <Tabs defaultValue="stats" className="mt-6">
+          <TabsList className="mb-4 bg-white border border-gray-200">
+            <TabsTrigger value="stats" className="data-[state=active]:bg-primary-500 data-[state=active]:text-white">
+              Performance Statistics
+            </TabsTrigger>
+            <TabsTrigger value="shifts" className="data-[state=active]:bg-primary-500 data-[state=active]:text-white">
+              Shift Roster
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="stats">
+          <TabsContent value="stats" className="space-y-6">
             <FilterCard 
               startDate={startDate} 
               endDate={endDate} 
@@ -109,7 +122,7 @@ const CSRStats = () => {
             />
           </TabsContent>
 
-          <TabsContent value="shifts">
+          <TabsContent value="shifts" className="space-y-6">
             <ShiftRoster 
               stats={stats} 
               shiftRoster={shiftRoster} 
