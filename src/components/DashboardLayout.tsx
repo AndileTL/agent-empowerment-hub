@@ -1,6 +1,5 @@
-
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu, BarChart2, Users, LineChart, Headset, BookOpen, CheckSquare, Settings, Award, ShoppingCart, Package, BadgePercent, FileText, AlertCircle } from "lucide-react";
+import { Menu, BarChart2, Users, LineChart, Headset, BookOpen, CheckSquare, Settings, Award, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -20,26 +19,6 @@ const DashboardLayout = ({
       label: "Dashboard",
       route: "/"
     }, 
-    {
-      icon: ShoppingCart,
-      label: "Sales",
-      route: "/sales"
-    },
-    {
-      icon: Package,
-      label: "Products",
-      route: "/products"
-    },
-    {
-      icon: BadgePercent,
-      label: "Promotions",
-      route: "/promotions"
-    },
-    {
-      icon: FileText,
-      label: "Reports",
-      route: "/reports"
-    },
     {
       icon: Users,
       label: "Agent Management",
