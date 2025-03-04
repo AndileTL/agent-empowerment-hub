@@ -206,70 +206,71 @@ const ContactCenterPerformance = () => {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>SLA Performance</CardTitle>
-              <CardDescription>Service level agreement performance across channels</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={slaPieData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      label={({ name, value }) => `${name}: ${value}%`}
-                    >
-                      {slaPieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Legend verticalAlign="bottom" height={36} />
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+        {/* SLA Performance Card - Moved up */}
+        <Card>
+          <CardHeader>
+            <CardTitle>SLA Performance</CardTitle>
+            <CardDescription>Service level agreement performance across channels</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={slaPieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, value }) => `${name}: ${value}%`}
+                  >
+                    {slaPieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Legend verticalAlign="bottom" height={36} />
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Key Metrics Summary</CardTitle>
-              <CardDescription>Overview of important contact center metrics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500">Total Tickets</div>
-                  <div className="text-2xl font-bold">475</div>
-                  <div className="text-sm text-green-500">+5% from last period</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500">Call Answer Rate</div>
-                  <div className="text-2xl font-bold">93.5%</div>
-                  <div className="text-sm text-green-500">+2.1% from last period</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500">First Response Rate</div>
-                  <div className="text-2xl font-bold">90.5%</div>
-                  <div className="text-sm text-red-500">-1.2% from last period</div>
-                </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500">Resolution Time</div>
-                  <div className="text-2xl font-bold">1.8 days</div>
-                  <div className="text-sm text-green-500">-0.2 days from last period</div>
-                </div>
+        {/* Key Metrics Summary Card - Moved up */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Key Metrics Summary</CardTitle>
+            <CardDescription>Overview of important contact center metrics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-500">Total Tickets</div>
+                <div className="text-2xl font-bold">475</div>
+                <div className="text-sm text-green-500">+5% from last period</div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-500">Call Answer Rate</div>
+                <div className="text-2xl font-bold">93.5%</div>
+                <div className="text-sm text-green-500">+2.1% from last period</div>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-500">First Response Rate</div>
+                <div className="text-2xl font-bold">90.5%</div>
+                <div className="text-sm text-red-500">-1.2% from last period</div>
+              </div>
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="text-sm text-gray-500">Resolution Time</div>
+                <div className="text-2xl font-bold">1.8 days</div>
+                <div className="text-sm text-green-500">-0.2 days from last period</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
+        {/* CC Performance Table - Moved down */}
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
