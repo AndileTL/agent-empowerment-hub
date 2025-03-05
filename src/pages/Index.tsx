@@ -24,7 +24,6 @@ const Home = () => {
   const [insightsTab, setInsightsTab] = useState("network");
   const [mainTab, setMainTab] = useState("dashboard");
   
-  // Key metrics data
   const performanceMetrics = {
     handlingTime: {
       value: "280s",
@@ -56,7 +55,6 @@ const Home = () => {
     }
   };
 
-  // Call reason data for pie chart
   const callReasonData = [
     { name: "Technical Issues", value: 29, color: "#8884d8" },
     { name: "Billing Questions", value: 21, color: "#82b1ff" },
@@ -66,7 +64,6 @@ const Home = () => {
     { name: "Other", value: 8, color: "#ffeb3b" },
   ];
 
-  // Team performance data
   const teamPerformance = [
     {
       name: "Team Alpha",
@@ -91,7 +88,6 @@ const Home = () => {
     },
   ];
 
-  // Channel performance data
   const channelPerformance = [
     {
       channel: "Voice",
@@ -125,7 +121,6 @@ const Home = () => {
     },
   ];
 
-  // Recent activities - keeping this from the original dashboard
   const recentActivities = [
     {
       type: "new-agent",
@@ -149,7 +144,6 @@ const Home = () => {
     },
   ];
 
-  // Network/System Outage data
   const outageData = [
     {
       id: "INC12345",
@@ -180,7 +174,6 @@ const Home = () => {
     }
   ];
 
-  // SLA Data
   const slaData = [
     { 
       month: "Jan", 
@@ -219,7 +212,6 @@ const Home = () => {
     }
   ];
 
-  // CAR Data
   const carData = [
     {
       id: "CAR0001",
@@ -253,7 +245,6 @@ const Home = () => {
     }
   ];
 
-  // Live Chat SLA Metrics
   const chatSlaMetrics = {
     avgWaitTime: "45s",
     avgHandleTime: "8m 20s",
@@ -262,7 +253,6 @@ const Home = () => {
     waitingChats: 5
   };
 
-  // Email SLA Metrics
   const emailSlaMetrics = {
     avgResponseTime: "2h 15m",
     meetingSla: "92%",
@@ -285,14 +275,12 @@ const Home = () => {
     }
   };
 
-  // SLA pie chart data for the specific period
   const slaPieData = [
     { name: "Phone SLA", value: 95, color: "#8884d8" },
     { name: "Chat SLA", value: 88, color: "#82ca9d" },
     { name: "Email SLA", value: 92, color: "#ffc658" }
   ];
 
-  // Modified call center metrics table data to match the requested structure
   const callCenterMetricsData = [
     {
       date: "2023-07-01",
@@ -397,16 +385,13 @@ const Home = () => {
           </div>
         </div>
 
-        {/* Main Dashboard Tabs */}
         <Tabs value={mainTab} onValueChange={setMainTab} className="w-full">
           <TabsList className="mb-4">
             <TabsTrigger value="dashboard">Main Dashboard</TabsTrigger>
             <TabsTrigger value="insights">Contact Center Insights</TabsTrigger>
           </TabsList>
 
-          {/* Main Dashboard Content */}
           <TabsContent value="dashboard" className="space-y-6">
-            {/* Key Metrics Section */}
             <section>
               <h2 className="text-xl font-semibold mb-4">Key Metrics</h2>
               <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6">
@@ -455,7 +440,6 @@ const Home = () => {
               </div>
             </section>
 
-            {/* Call Reason Analysis Section */}
             <section>
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Call Reason Analysis</h2>
@@ -523,7 +507,6 @@ const Home = () => {
               </Card>
             </section>
 
-            {/* Team Performance Table */}
             <section>
               <h2 className="text-xl font-semibold mb-4">Team Performance</h2>
               <Card className="p-0 overflow-hidden">
@@ -556,7 +539,6 @@ const Home = () => {
               </Card>
             </section>
 
-            {/* Channel Performance */}
             <section>
               <h2 className="text-xl font-semibold mb-4">Channel Performance</h2>
               <Card className="p-0 overflow-hidden">
@@ -598,7 +580,6 @@ const Home = () => {
               </Card>
             </section>
 
-            {/* Recent Activities */}
             <section>
               <h2 className="text-xl font-semibold mb-4">Recent Activities</h2>
               <Card className="p-6">
@@ -616,7 +597,6 @@ const Home = () => {
             </section>
           </TabsContent>
 
-          {/* Contact Center Insights Tab Content */}
           <TabsContent value="insights" className="space-y-6">
             <div className="mb-4">
               <Tabs value={insightsTab} onValueChange={setInsightsTab}>
@@ -635,7 +615,6 @@ const Home = () => {
                   </TabsTrigger>
                 </TabsList>
                 
-                {/* Network/System Outage Content */}
                 <TabsContent value="network" className="space-y-4 mt-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-lg font-semibold">Active Outages</h3>
@@ -692,167 +671,194 @@ const Home = () => {
                   </Card>
                 </TabsContent>
                 
-                {/* SLA & Call Answer Rate Viewing Content */}
                 <TabsContent value="sla" className="space-y-4 mt-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card>
-                      <CardHeader>
-                        <div className="flex justify-between items-center">
-                          <CardTitle>SLA Performance</CardTitle>
-                          <Button variant="outline" size="sm">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Configure SLA
-                          </Button>
+                  <Card>
+                    <CardHeader>
+                      <div className="flex justify-between items-center">
+                        <CardTitle>SLA Performance</CardTitle>
+                        <Button variant="outline" size="sm">
+                          <Plus className="h-4 w-4 mr-2" />
+                          Configure SLA
+                        </Button>
+                      </div>
+                      <CardDescription>Performance across channels for selected period</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="h-[300px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={slaData}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis dataKey="month" />
+                              <YAxis />
+                              <Tooltip />
+                              <Legend />
+                              <Bar dataKey="phone" name="Phone" fill="#8884d8" />
+                              <Bar dataKey="chat" name="Chat" fill="#82ca9d" />
+                              <Bar dataKey="email" name="Email" fill="#ffc658" />
+                            </BarChart>
+                          </ResponsiveContainer>
                         </div>
-                        <CardDescription>Performance across channels for selected period</CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="h-[300px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <BarChart data={slaData}>
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="month" />
-                                <YAxis />
-                                <Tooltip />
-                                <Legend />
-                                <Bar dataKey="phone" name="Phone" fill="#8884d8" />
-                                <Bar dataKey="chat" name="Chat" fill="#82ca9d" />
-                                <Bar dataKey="email" name="Email" fill="#ffc658" />
-                              </BarChart>
-                            </ResponsiveContainer>
+                        <div className="h-[300px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <PieChart>
+                              <Pie
+                                data={slaPieData}
+                                cx="50%"
+                                cy="50%"
+                                labelLine={true}
+                                outerRadius={100}
+                                fill="#8884d8"
+                                dataKey="value"
+                                label={({name, percent}) => `${name}: ${percent.toFixed(0)}%`}
+                              >
+                                {slaPieData.map((entry, index) => (
+                                  <Cell key={`cell-${index}`} fill={entry.color} />
+                                ))}
+                              </Pie>
+                              <Tooltip formatter={(value) => `${value}%`} />
+                              <Legend />
+                            </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="space-y-2 w-1/3">
+                            <label className="text-sm font-medium">Start Date</label>
+                            <Input type="date" />
                           </div>
-                          <div className="h-[300px]">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <PieChart>
-                                <Pie
-                                  data={slaPieData}
-                                  cx="50%"
-                                  cy="50%"
-                                  labelLine={true}
-                                  outerRadius={100}
-                                  fill="#8884d8"
-                                  dataKey="value"
-                                  label={({name, percent}) => `${name}: ${percent.toFixed(0)}%`}
-                                >
-                                  {slaPieData.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.color} />
-                                  ))}
-                                </Pie>
-                                <Tooltip formatter={(value) => `${value}%`} />
-                                <Legend />
-                              </PieChart>
-                            </ResponsiveContainer>
+                          <div className="space-y-2 w-1/3">
+                            <label className="text-sm font-medium">End Date</label>
+                            <Input type="date" />
+                          </div>
+                          <div className="space-y-2 w-1/3 ml-2">
+                            <label className="text-sm font-medium">Channel</label>
+                            <Select>
+                              <SelectTrigger>
+                                <SelectValue placeholder="All Channels" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="all">All Channels</SelectItem>
+                                <SelectItem value="phone">Phone</SelectItem>
+                                <SelectItem value="chat">Chat</SelectItem>
+                                <SelectItem value="email">Email</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </div>
                         </div>
-                        <div className="mt-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="space-y-2 w-1/3">
-                              <label className="text-sm font-medium">Start Date</label>
-                              <Input type="date" />
-                            </div>
-                            <div className="space-y-2 w-1/3">
-                              <label className="text-sm font-medium">End Date</label>
-                              <Input type="date" />
-                            </div>
-                            <div className="space-y-2 w-1/3 ml-2">
-                              <label className="text-sm font-medium">Channel</label>
-                              <Select>
-                                <SelectTrigger>
-                                  <SelectValue placeholder="All Channels" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="all">All Channels</SelectItem>
-                                  <SelectItem value="phone">Phone</SelectItem>
-                                  <SelectItem value="chat">Chat</SelectItem>
-                                  <SelectItem value="email">Email</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </div>
-                          <Button className="w-full mt-2">Apply Filters</Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        <Button className="w-full mt-2">Apply Filters</Button>
+                      </div>
+                    </CardContent>
+                  </Card>
 
-                    <Card>
-                      <CardHeader>
-                        <div className="flex justify-between items-center">
-                          <CardTitle>Call Answer Rate</CardTitle>
-                          <Button variant="outline" size="sm">
-                            <Plus className="h-4 w-4 mr-2" />
-                            Add CAR
-                          </Button>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Key Metrics Summary</CardTitle>
+                      <CardDescription>Overview of important contact center metrics</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Total Tickets</div>
+                          <div className="text-2xl font-bold">475</div>
+                          <div className="text-sm text-green-500">+5% from last period</div>
                         </div>
-                        <CardDescription>Call answer rate metrics</CardDescription>
-                      </CardHeader>
-                      <CardContent className="p-0">
-                        <div className="overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>Tickets Received</TableHead>
-                                <TableHead>Tickets Resolved</TableHead>
-                                <TableHead>Cases Escalated</TableHead>
-                                <TableHead>Calls Received</TableHead>
-                                <TableHead>Calls Answered</TableHead>
-                                <TableHead>Calls SLA</TableHead>
-                                <TableHead>Calls CAR</TableHead>
-                                <TableHead>LiveChat Received</TableHead>
-                                <TableHead>LiveChat Answered</TableHead>
-                                <TableHead>LiveChat SLA</TableHead>
-                                <TableHead>LiveChat L/T</TableHead>
-                                <TableHead>Emails Received</TableHead>
-                                <TableHead>1st Response</TableHead>
-                                <TableHead>Emails Resolved</TableHead>
-                                <TableHead>Emails FRR</TableHead>
-                                <TableHead>Social Resolved</TableHead>
-                                <TableHead>Walk-Ins</TableHead>
-                                <TableHead>Total Issues</TableHead>
-                                <TableHead>Ticket to Calls</TableHead>
-                                <TableHead>Dialogue Classif</TableHead>
-                                <TableHead>Major Network Outages</TableHead>
-                                <TableHead>System Downtime</TableHead>
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Call Answer Rate</div>
+                          <div className="text-2xl font-bold">93.5%</div>
+                          <div className="text-sm text-green-500">+2.1% from last period</div>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">First Response Rate</div>
+                          <div className="text-2xl font-bold">90.5%</div>
+                          <div className="text-sm text-red-500">-1.2% from last period</div>
+                        </div>
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <div className="text-sm text-gray-500">Resolution Time</div>
+                          <div className="text-2xl font-bold">1.8 days</div>
+                          <div className="text-sm text-green-500">-0.2 days from last period</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <div className="flex justify-between items-center">
+                        <CardTitle>Call Answer Rate</CardTitle>
+                        <Button variant="outline" size="sm">
+                          <Plus className="h-4 w-4 mr-2" />
+                          Add CAR
+                        </Button>
+                      </div>
+                      <CardDescription>Call answer rate metrics</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Date</TableHead>
+                              <TableHead>Tickets Received</TableHead>
+                              <TableHead>Tickets Resolved</TableHead>
+                              <TableHead>Cases Escalated</TableHead>
+                              <TableHead>Calls Received</TableHead>
+                              <TableHead>Calls Answered</TableHead>
+                              <TableHead>Calls SLA</TableHead>
+                              <TableHead>Calls CAR</TableHead>
+                              <TableHead>LiveChat Received</TableHead>
+                              <TableHead>LiveChat Answered</TableHead>
+                              <TableHead>LiveChat SLA</TableHead>
+                              <TableHead>LiveChat L/T</TableHead>
+                              <TableHead>Emails Received</TableHead>
+                              <TableHead>1st Response</TableHead>
+                              <TableHead>Emails Resolved</TableHead>
+                              <TableHead>Emails FRR</TableHead>
+                              <TableHead>Social Resolved</TableHead>
+                              <TableHead>Walk-Ins</TableHead>
+                              <TableHead>Total Issues</TableHead>
+                              <TableHead>Ticket to Calls</TableHead>
+                              <TableHead>Dialogue Classif</TableHead>
+                              <TableHead>Major Network Outages</TableHead>
+                              <TableHead>System Downtime</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {callCenterMetricsData.map((item, index) => (
+                              <TableRow key={index}>
+                                <TableCell>{item.date}</TableCell>
+                                <TableCell>{item.tickets.ticketsReceived}</TableCell>
+                                <TableCell>{item.tickets.ticketsResolved}</TableCell>
+                                <TableCell>{item.tickets.casesEscalated}</TableCell>
+                                <TableCell>{item.calls.callsReceived}</TableCell>
+                                <TableCell>{item.calls.callsAnswered}</TableCell>
+                                <TableCell>{item.calls.callsSLA}%</TableCell>
+                                <TableCell>{item.calls.callsCAR}%</TableCell>
+                                <TableCell>{item.liveChat.liveChatReceived}</TableCell>
+                                <TableCell>{item.liveChat.liveChatAnswered}</TableCell>
+                                <TableCell>{item.liveChat.liveChatSLA}%</TableCell>
+                                <TableCell>{item.liveChat.liveChatLT}%</TableCell>
+                                <TableCell>{item.email.emailsReceived}</TableCell>
+                                <TableCell>{item.email.emailsResponse}</TableCell>
+                                <TableCell>{item.email.emailsResolved}</TableCell>
+                                <TableCell>{item.email.emailsFRR}%</TableCell>
+                                <TableCell>{item.social.socialResolved}</TableCell>
+                                <TableCell>{item.walkIns}</TableCell>
+                                <TableCell>{item.totalIssues}</TableCell>
+                                <TableCell>{item.ticketToCalls}</TableCell>
+                                <TableCell>{item.dialoguesClassification}%</TableCell>
+                                <TableCell>{item.majorOutages}</TableCell>
+                                <TableCell>{item.systemDowntime}</TableCell>
                               </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {callCenterMetricsData.map((item, index) => (
-                                <TableRow key={index}>
-                                  <TableCell>{item.date}</TableCell>
-                                  <TableCell>{item.tickets.ticketsReceived}</TableCell>
-                                  <TableCell>{item.tickets.ticketsResolved}</TableCell>
-                                  <TableCell>{item.tickets.casesEscalated}</TableCell>
-                                  <TableCell>{item.calls.callsReceived}</TableCell>
-                                  <TableCell>{item.calls.callsAnswered}</TableCell>
-                                  <TableCell>{item.calls.callsSLA}%</TableCell>
-                                  <TableCell>{item.calls.callsCAR}%</TableCell>
-                                  <TableCell>{item.liveChat.liveChatReceived}</TableCell>
-                                  <TableCell>{item.liveChat.liveChatAnswered}</TableCell>
-                                  <TableCell>{item.liveChat.liveChatSLA}%</TableCell>
-                                  <TableCell>{item.liveChat.liveChatLT}%</TableCell>
-                                  <TableCell>{item.email.emailsReceived}</TableCell>
-                                  <TableCell>{item.email.emailsResponse}</TableCell>
-                                  <TableCell>{item.email.emailsResolved}</TableCell>
-                                  <TableCell>{item.email.emailsFRR}%</TableCell>
-                                  <TableCell>{item.social.socialResolved}</TableCell>
-                                  <TableCell>{item.walkIns}</TableCell>
-                                  <TableCell>{item.totalIssues}</TableCell>
-                                  <TableCell>{item.ticketToCalls}</TableCell>
-                                  <TableCell>{item.dialoguesClassification}%</TableCell>
-                                  <TableCell>{item.majorOutages}</TableCell>
-                                  <TableCell>{item.systemDowntime}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </TabsContent>
                 
-                {/* Live SLA Monitoring Content */}
                 <TabsContent value="live" className="mt-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Card>
