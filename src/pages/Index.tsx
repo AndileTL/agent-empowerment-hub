@@ -674,13 +674,7 @@ const Home = () => {
                 <TabsContent value="sla" className="space-y-4 mt-4">
                   <Card>
                     <CardHeader>
-                      <div className="flex justify-between items-center">
-                        <CardTitle>SLA Performance</CardTitle>
-                        <Button variant="outline" size="sm">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Configure SLA
-                        </Button>
-                      </div>
+                      <CardTitle>SLA Performance</CardTitle>
                       <CardDescription>Performance across channels for selected period</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -785,14 +779,8 @@ const Home = () => {
 
                   <Card>
                     <CardHeader>
-                      <div className="flex justify-between items-center">
-                        <CardTitle>Call Answer Rate</CardTitle>
-                        <Button variant="outline" size="sm">
-                          <Plus className="h-4 w-4 mr-2" />
-                          Add CAR
-                        </Button>
-                      </div>
-                      <CardDescription>Call answer rate metrics</CardDescription>
+                      <CardTitle>Contact Centre Insights Report</CardTitle>
+                      <CardDescription>CC Metrics</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
                       <div className="overflow-x-auto">
