@@ -2,6 +2,7 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Link } from "react-router-dom";
 
 interface TeamData {
   name: string;
@@ -9,6 +10,7 @@ interface TeamData {
   csat: string;
   fcr: string;
   sla: string;
+  id?: string; // Optional ID for linking to agent details
 }
 
 interface TeamPerformanceProps {
@@ -40,7 +42,14 @@ const TeamPerformance: React.FC<TeamPerformanceProps> = ({ data }) => {
                 <TableCell>{team.fcr}</TableCell>
                 <TableCell>{team.sla}</TableCell>
                 <TableCell>
-                  <button className="text-blue-600 hover:underline">View Details</button>
+                  <div className="flex gap-2">
+                    <button className="text-blue-600 hover:underline">View Details</button>
+                    {team.id && (
+                      <Link to={`/agent-performance/${team.id}`} className="text-green-600 hover:underline">
+                        Performance
+                      </Link>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}

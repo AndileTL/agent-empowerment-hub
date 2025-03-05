@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Index from "@/pages/Index";
 import AgentManagement from "@/pages/AgentManagement";
 import AgentDetails from "@/pages/AgentDetails";
+import AgentPerformance from "@/pages/AgentPerformance";
 import CSRStats from "@/pages/CSRStats";
 import ContactCenterPerformance from "@/pages/ContactCenterPerformance";
 import Recognition from "@/pages/Recognition";
@@ -35,6 +36,7 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/agents" element={<AgentManagement />} />
             <Route path="/agents/:id" element={<AgentDetails />} />
+            <Route path="/agent-performance/:id" element={<AgentPerformance />} />
             <Route path="/csr-stats" element={<CSRStats />} />
             <Route path="/cc-performance" element={<ContactCenterPerformance />} />
             <Route path="/recognition" element={<Recognition />} />
