@@ -601,10 +601,6 @@ const Home = () => {
             <div className="mb-4">
               <Tabs value={insightsTab} onValueChange={setInsightsTab}>
                 <TabsList>
-                  <TabsTrigger value="network">
-                    <AlertTriangle className="w-4 h-4 mr-2" />
-                    Network/System Outages
-                  </TabsTrigger>
                   <TabsTrigger value="sla">
                     <Activity className="w-4 h-4 mr-2" />
                     SLA & Call Answer Rate
@@ -614,62 +610,6 @@ const Home = () => {
                     Live SLA Monitoring
                   </TabsTrigger>
                 </TabsList>
-                
-                <TabsContent value="network" className="space-y-4 mt-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-semibold">Active Outages</h3>
-                    <Button>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Outage
-                    </Button>
-                  </div>
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        {outageData.map((outage) => (
-                          <div key={outage.id} className="border rounded-lg overflow-hidden">
-                            <div className={`flex justify-between items-center p-4 ${getSeverityClass(outage.severity)}`}>
-                              <div className="flex items-center gap-2">
-                                <AlertTriangle className="h-5 w-5" />
-                                <span className="font-semibold">{outage.reason}</span>
-                              </div>
-                              <span className="text-sm font-medium px-2 py-1 bg-white/20 rounded">
-                                {outage.id}
-                              </span>
-                            </div>
-                            <div className="p-4 bg-white">
-                              <div className="grid grid-cols-2 gap-4 mb-2">
-                                <div>
-                                  <p className="text-sm text-gray-500">Start Time</p>
-                                  <p className="font-medium">{outage.startTime}</p>
-                                </div>
-                                <div>
-                                  <p className="text-sm text-gray-500">Est. Resolution</p>
-                                  <p className="font-medium">{outage.estimatedResolution}</p>
-                                </div>
-                              </div>
-                              <div className="mb-2">
-                                <p className="text-sm text-gray-500">Affected Services</p>
-                                <div className="flex flex-wrap gap-2 mt-1">
-                                  {outage.affectedServices.map((service, idx) => (
-                                    <span key={idx} className="px-2 py-1 bg-gray-100 rounded text-sm">
-                                      {service}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                              <div>
-                                <p className="text-sm text-gray-500">Updates</p>
-                                <p className="text-sm mt-1">{outage.updates}</p>
-                              </div>
-                              <Button variant="outline" className="mt-3 w-full">View Details</Button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
                 
                 <TabsContent value="sla" className="space-y-4 mt-4">
                   <Card>
