@@ -1,8 +1,9 @@
+
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
-import { Menu, BarChart2, Users, LineChart, Headset, BookOpen, CheckSquare, Settings, Award, AlertCircle } from "lucide-react";
+import { Menu, BarChart2, Users, LineChart, Headset, BookOpen, CheckSquare, Settings, Award, AlertCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -12,6 +13,25 @@ const DashboardLayout = ({
   children
 }: DashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Check if user has a preference stored in localStorage
+    const savedPreference = localStorage.getItem('darkMode');
+    return savedPreference ? JSON.parse(savedPreference) : false;
+  });
+  
+  // Update the dark mode class on the html element
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+  }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
   
   const menuItems = [
     {
@@ -67,13 +87,13 @@ const DashboardLayout = ({
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
-        <Sidebar className="border-r border-gray-200 sidebar-gradient text-white">
+      <div className={`min-h-screen flex w-full ${darkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        <Sidebar className={`border-r ${darkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200'} sidebar-gradient text-white`}>
           <SidebarContent className="p-4 rounded-sm">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-primary-500 rounded-md flex items-center justify-center text-white font-bold mr-2">K</div>
-                <h1 className="text-xl font-semibold text-white">Kelline</h1>
+                <div className="w-8 h-8 bg-primary-500 rounded-md flex items-center justify-center text-white font-bold mr-2">C</div>
+                <h1 className="text-xl font-semibold text-white">Contact Centre MS</h1>
               </div>
               <SidebarTrigger>
                 <Button variant="ghost" size="icon" className="text-white hover:bg-secondary-700">
@@ -133,8 +153,18 @@ const DashboardLayout = ({
           </SidebarContent>
         </Sidebar>
 
-        <main className="flex-1 p-8 overflow-auto">
+        <main className={`flex-1 p-8 overflow-auto ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
           <div className="max-w-7xl mx-auto">
+            <div className="flex justify-end mb-4">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={toggleDarkMode}
+                className={darkMode ? 'text-yellow-400' : 'text-gray-600'}
+              >
+                {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+              </Button>
+            </div>
             {children}
           </div>
         </main>
