@@ -62,23 +62,23 @@ const CSRStats = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8">
-        <div className="header-gradient mb-8">
-          <div className="max-w-4xl">
-            <h1 className="text-3xl font-bold">Greetings!</h1>
+      <div className="space-y-6">
+        <div className="header-gradient rounded-xl mb-6">
+          <div className="max-w-4xl p-6">
+            <h1 className="text-3xl font-bold text-white">Welcome to CSR Stats Dashboard</h1>
             <p className="mt-2 text-gray-100 max-w-2xl">
-              Follow the setup wizard that will guide you through the remaining steps to your first sale
+              Monitor agent performance metrics, export data and manage shifts in one place
             </p>
           </div>
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">CSR Statistics</h1>
-            <p className="mt-1 text-gray-600">Monitor agent performance metrics and manage shifts</p>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">CSR Statistics</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-300">Track agent metrics across channels</p>
           </div>
           <div className="flex gap-3">
-            <Button onClick={handleExport} variant="outline" className="border-gray-300 bg-white hover:bg-gray-50">
+            <Button onClick={handleExport} variant="outline" className="border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
               <Download className="mr-2 h-4 w-4" />
               Export
             </Button>
@@ -89,7 +89,7 @@ const CSRStats = () => {
                 onChange={handleImport}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <Button variant="outline" className="border-gray-300 bg-white hover:bg-gray-50">
+              <Button variant="outline" className="border-gray-300 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700">
                 <Upload className="mr-2 h-4 w-4" />
                 Import
               </Button>
@@ -97,8 +97,8 @@ const CSRStats = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="stats" className="mt-6">
-          <TabsList className="mb-4 bg-white border border-gray-200">
+        <Tabs defaultValue="stats" className="space-y-4">
+          <TabsList className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
             <TabsTrigger value="stats" className="data-[state=active]:bg-primary-500 data-[state=active]:text-white">
               Performance Statistics
             </TabsTrigger>
@@ -107,7 +107,7 @@ const CSRStats = () => {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="stats" className="space-y-6">
+          <TabsContent value="stats" className="space-y-4 mt-4">
             <FilterCard 
               startDate={startDate} 
               endDate={endDate} 
@@ -122,7 +122,7 @@ const CSRStats = () => {
             />
           </TabsContent>
 
-          <TabsContent value="shifts" className="space-y-6">
+          <TabsContent value="shifts" className="space-y-4 mt-4">
             <ShiftRoster 
               stats={stats} 
               shiftRoster={shiftRoster} 

@@ -57,53 +57,53 @@ const PerformanceOverview = ({ stats, isLoading, updateStats }: PerformanceOverv
   };
 
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-sm border border-gray-100 dark:border-gray-700 dark:bg-gray-800">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Performance Overview</CardTitle>
+        <CardTitle className="text-lg font-medium dark:text-white">Performance Overview</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="flex justify-center p-6">
+          <div className="flex justify-center p-4">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
           </div>
         ) : (
-          <div className="overflow-x-auto -mx-6">
+          <div className="overflow-x-auto -mx-4">
             <Table className="w-full border-collapse">
-              <TableHeader className="bg-gray-50">
-                <TableRow className="border-b border-gray-200">
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Actions</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Agent</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Group</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Shift Type</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Helpdesk Tickets</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Calls</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Live Chat</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Support Emails</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Social Tickets</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Billing Tickets</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Walk-ins</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Total Issues</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Satisfaction</TableHead>
+              <TableHeader className="bg-gray-50 dark:bg-gray-700">
+                <TableRow className="border-b border-gray-200 dark:border-gray-600">
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Actions</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Agent</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Group</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Shift Type</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Helpdesk</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Calls</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Chat</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Emails</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Social</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Billing</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Walk-ins</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Total</TableHead>
+                  <TableHead className="py-3 px-3 text-left font-medium text-gray-600 dark:text-gray-300">Satisfaction</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {stats?.map((stat) => (
-                  <TableRow key={stat.agent_id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <TableCell className="py-3 px-4">
+                  <TableRow key={stat.agent_id} className="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <TableCell className="py-2 px-3">
                       {editingId === stat.id ? (
                         <Button size="sm" onClick={handleSave} className="bg-primary-500 hover:bg-primary-600 text-white">
                           <Save className="h-4 w-4" />
                         </Button>
                       ) : (
                         <Button size="sm" variant="ghost" onClick={() => handleEdit(stat)}>
-                          <Edit2 className="h-4 w-4 text-gray-500" />
+                          <Edit2 className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                         </Button>
                       )}
                     </TableCell>
-                    <TableCell className="py-3 px-4 font-medium">{stat.name || stat.email}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.group}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.shift_type}</TableCell>
-                    <TableCell className="py-3 px-4">
+                    <TableCell className="py-2 px-3 font-medium dark:text-white">{stat.name || stat.email}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.group}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.shift_type}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
                       {editingId === stat.id ? (
                         <Input
                           type="number"
@@ -112,24 +112,31 @@ const PerformanceOverview = ({ stats, isLoading, updateStats }: PerformanceOverv
                             ...editedData,
                             helpdesk_tickets: parseInt(e.target.value)
                           })}
-                          className="w-20 h-8 text-sm"
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
                         />
                       ) : (
                         stat.helpdesk_tickets
                       )}
                     </TableCell>
-                    <TableCell className="py-3 px-4">{stat.calls}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.live_chat}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.support_dns_emails}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.social_tickets}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.billing_tickets}</TableCell>
-                    <TableCell className="py-3 px-4">{stat.walk_ins}</TableCell>
-                    <TableCell className="py-3 px-4 font-medium">{stat.total_issues_handled}</TableCell>
-                    <TableCell className="py-3 px-4">
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800">95%</span>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.calls}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.live_chat}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.support_dns_emails}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.social_tickets}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.billing_tickets}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.walk_ins}</TableCell>
+                    <TableCell className="py-2 px-3 font-medium dark:text-white">{stat.total_issues_handled}</TableCell>
+                    <TableCell className="py-2 px-3">
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-200">95%</span>
                     </TableCell>
                   </TableRow>
                 ))}
+                {(!stats || stats.length === 0) && (
+                  <TableRow>
+                    <TableCell colSpan={13} className="py-4 text-center text-gray-500 dark:text-gray-400">
+                      No statistics available for the selected period.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           </div>

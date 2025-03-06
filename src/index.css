@@ -104,5 +104,12 @@
 }
 
 .header-gradient {
-  @apply bg-gradient-hero bg-cover bg-center text-white p-6 rounded-lg;
+  @apply bg-gradient-to-r from-secondary-800 to-secondary-600 text-white rounded-xl shadow-md;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .header-gradient {
+    @apply p-4;
+  }
 }

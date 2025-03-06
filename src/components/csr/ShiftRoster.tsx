@@ -66,20 +66,20 @@ const ShiftRoster = ({ stats, shiftRoster, createShift, updateShift }: ShiftRost
   };
 
   return (
-    <Card className="shadow-md">
+    <Card className="shadow-sm border border-gray-100 dark:border-gray-700 dark:bg-gray-800">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-medium">Shift Roster Management</CardTitle>
+        <CardTitle className="text-lg font-medium dark:text-white">Shift Roster Management</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Agent</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Agent</label>
               <Select value={selectedAgent} onValueChange={setSelectedAgent}>
-                <SelectTrigger className="border-gray-300 bg-white">
+                <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white">
                   <SelectValue placeholder="Select agent" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="dark:bg-gray-800">
                   {stats?.map((stat) => (
                     <SelectItem key={stat.agent_id} value={stat.agent_id}>
                       {stat.name || stat.email}
@@ -89,12 +89,12 @@ const ShiftRoster = ({ stats, shiftRoster, createShift, updateShift }: ShiftRost
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Shift Type</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Shift Type</label>
               <Select value={selectedShiftType} onValueChange={setSelectedShiftType}>
-                <SelectTrigger className="border-gray-300 bg-white">
+                <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 dark:text-white">
                   <SelectValue placeholder="Select shift type" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="dark:bg-gray-800">
                   <SelectItem value="morning">Morning</SelectItem>
                   <SelectItem value="afternoon">Afternoon</SelectItem>
                   <SelectItem value="night">Night</SelectItem>
@@ -111,42 +111,42 @@ const ShiftRoster = ({ stats, shiftRoster, createShift, updateShift }: ShiftRost
             </div>
           </div>
 
-          <div className="overflow-x-auto -mx-6">
+          <div className="overflow-x-auto -mx-4">
             <Table className="w-full border-collapse">
-              <TableHeader className="bg-gray-50">
-                <TableRow className="border-b border-gray-200">
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Agent</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Current Shift</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Status</TableHead>
-                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600">Actions</TableHead>
+              <TableHeader className="bg-gray-50 dark:bg-gray-700">
+                <TableRow className="border-b border-gray-200 dark:border-gray-600">
+                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600 dark:text-gray-300">Agent</TableHead>
+                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600 dark:text-gray-300">Current Shift</TableHead>
+                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600 dark:text-gray-300">Status</TableHead>
+                  <TableHead className="py-3 px-4 text-left font-medium text-gray-600 dark:text-gray-300">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {shiftRoster?.map((shift: any) => (
-                  <TableRow key={shift.id} className="border-b border-gray-200 hover:bg-gray-50">
-                    <TableCell className="py-3 px-4 font-medium">{shift.email}</TableCell>
-                    <TableCell className="py-3 px-4">
+                  <TableRow key={shift.id} className="border-b border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700">
+                    <TableCell className="py-3 px-4 font-medium dark:text-white">{shift.email}</TableCell>
+                    <TableCell className="py-3 px-4 dark:text-gray-300">
                       <span className="capitalize">{shift.shift_type}</span>
                     </TableCell>
                     <TableCell className="py-3 px-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         shift.shift_status === 'active' 
-                          ? 'bg-success-100 text-success-800' 
-                          : 'bg-gray-100 text-gray-800'
+                          ? 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-200' 
+                          : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                       }`}>
                         {shift.shift_status}
                       </span>
                     </TableCell>
                     <TableCell className="py-3 px-4">
                       <Button variant="ghost" size="sm">
-                        <Edit2 className="h-4 w-4 text-gray-500" />
+                        <Edit2 className="h-4 w-4 text-gray-500 dark:text-gray-400" />
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
                 {(!shiftRoster || shiftRoster.length === 0) && (
                   <TableRow>
-                    <TableCell colSpan={4} className="py-6 text-center text-gray-500">
+                    <TableCell colSpan={4} className="py-6 text-center text-gray-500 dark:text-gray-400">
                       No shifts assigned yet. Use the form above to assign shifts.
                     </TableCell>
                   </TableRow>
