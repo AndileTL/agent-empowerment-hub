@@ -63,15 +63,6 @@ const CSRStats = () => {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        <div className="header-gradient rounded-xl mb-6">
-          <div className="max-w-4xl p-6">
-            <h1 className="text-3xl font-bold text-white">Welcome to CSR Stats Dashboard</h1>
-            <p className="mt-2 text-gray-100 max-w-2xl">
-              Monitor agent performance metrics, export data and manage shifts in one place
-            </p>
-          </div>
-        </div>
-
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">CSR Statistics</h1>

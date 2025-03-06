@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import AgentCard from "@/components/AgentCard";
 import { CSRStatsData } from "@/hooks/useCSRStats";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface AgentsListProps {
   agents: CSRStatsData[] | undefined;
@@ -14,11 +14,28 @@ interface AgentsListProps {
 const AgentsList = ({ agents }: AgentsListProps) => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const [filteredAgents, setFilteredAgents] = useState<CSRStatsData[] | undefined>(agents);
 
-  // Filter agents based on search query
-  const filteredAgents = agents?.filter(agent =>
-    (agent.name || agent.email).toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Update filtered agents whenever search query or agents list changes
+  useEffect(() => {
+    if (!agents) {
+      setFilteredAgents([]);
+      return;
+    }
+    
+    if (!searchQuery.trim()) {
+      setFilteredAgents(agents);
+      return;
+    }
+    
+    const lowercaseQuery = searchQuery.toLowerCase();
+    const filtered = agents.filter(agent => 
+      (agent.name?.toLowerCase().includes(lowercaseQuery) || 
+       agent.email.toLowerCase().includes(lowercaseQuery))
+    );
+    
+    setFilteredAgents(filtered);
+  }, [agents, searchQuery]);
 
   return (
     <div className="lg:col-span-2 space-y-6">
@@ -61,6 +78,11 @@ const AgentsList = ({ agents }: AgentsListProps) => {
             />
           </div>
         ))}
+        {(!filteredAgents || filteredAgents.length === 0) && (
+          <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+            {searchQuery ? "No agents found matching your search." : "No agents available."}
+          </div>
+        )}
       </div>
     </div>
   );
