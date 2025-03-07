@@ -643,7 +643,7 @@ const ContactCenterPerformance = () => {
               <Label htmlFor="majorOutages">Major Network Outages</Label>
               <Input 
                 id="majorOutages" 
-                type="number"
+                type="value"
                 value={newPerformanceData.majorOutages}
                 onChange={(e) => setNewPerformanceData({
                   ...newPerformanceData, 
