@@ -56,6 +56,18 @@ const PerformanceOverview = ({ stats, isLoading, updateStats }: PerformanceOverv
     }
   };
 
+  const handleInputChange = (field: string, value: string | number) => {
+    // Convert string to number for numeric fields
+    const numericValue = typeof value === 'string' && !isNaN(Number(value)) 
+      ? parseInt(value, 10) 
+      : value;
+    
+    setEditedData({
+      ...editedData,
+      [field]: numericValue
+    });
+  };
+
   return (
     <Card className="shadow-sm border border-gray-100 dark:border-gray-700 dark:bg-gray-800">
       <CardHeader className="pb-2">
@@ -108,22 +120,85 @@ const PerformanceOverview = ({ stats, isLoading, updateStats }: PerformanceOverv
                         <Input
                           type="number"
                           value={editedData.helpdesk_tickets}
-                          onChange={(e) => setEditedData({
-                            ...editedData,
-                            helpdesk_tickets: parseInt(e.target.value)
-                          })}
+                          onChange={(e) => handleInputChange('helpdesk_tickets', e.target.value)}
                           className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
                         />
                       ) : (
                         stat.helpdesk_tickets
                       )}
                     </TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.calls}</TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.live_chat}</TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.support_dns_emails}</TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.social_tickets}</TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.billing_tickets}</TableCell>
-                    <TableCell className="py-2 px-3 dark:text-gray-300">{stat.walk_ins}</TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.calls}
+                          onChange={(e) => handleInputChange('calls', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.calls
+                      )}
+                    </TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.live_chat}
+                          onChange={(e) => handleInputChange('live_chat', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.live_chat
+                      )}
+                    </TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.support_dns_emails}
+                          onChange={(e) => handleInputChange('support_dns_emails', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.support_dns_emails
+                      )}
+                    </TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.social_tickets}
+                          onChange={(e) => handleInputChange('social_tickets', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.social_tickets
+                      )}
+                    </TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.billing_tickets}
+                          onChange={(e) => handleInputChange('billing_tickets', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.billing_tickets
+                      )}
+                    </TableCell>
+                    <TableCell className="py-2 px-3 dark:text-gray-300">
+                      {editingId === stat.id ? (
+                        <Input
+                          type="number"
+                          value={editedData.walk_ins}
+                          onChange={(e) => handleInputChange('walk_ins', e.target.value)}
+                          className="w-16 h-8 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                      ) : (
+                        stat.walk_ins
+                      )}
+                    </TableCell>
                     <TableCell className="py-2 px-3 font-medium dark:text-white">{stat.total_issues_handled}</TableCell>
                     <TableCell className="py-2 px-3">
                       <span className="px-2 py-1 rounded-full text-xs font-medium bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-200">95%</span>

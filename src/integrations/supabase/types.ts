@@ -335,9 +335,10 @@ export type Database = {
           livechat_la: number | null
           livechat_received: number | null
           livechat_sla: number | null
-          major_network_outages: number | null
+          major_network_outages: string | null
+          "Shift Comments": string | null
           social_resolved: number | null
-          system_downtime: number | null
+          system_downtime: string | null
           team_lead_group: string
           ticket_to_calls: number | null
           tickets_received: number | null
@@ -363,9 +364,10 @@ export type Database = {
           livechat_la?: number | null
           livechat_received?: number | null
           livechat_sla?: number | null
-          major_network_outages?: number | null
+          major_network_outages?: string | null
+          "Shift Comments"?: string | null
           social_resolved?: number | null
-          system_downtime?: number | null
+          system_downtime?: string | null
           team_lead_group?: string
           ticket_to_calls?: number | null
           tickets_received?: number | null
@@ -391,9 +393,10 @@ export type Database = {
           livechat_la?: number | null
           livechat_received?: number | null
           livechat_sla?: number | null
-          major_network_outages?: number | null
+          major_network_outages?: string | null
+          "Shift Comments"?: string | null
           social_resolved?: number | null
-          system_downtime?: number | null
+          system_downtime?: string | null
           team_lead_group?: string
           ticket_to_calls?: number | null
           tickets_received?: number | null
