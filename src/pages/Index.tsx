@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useCSRStats } from "@/hooks/useCSRStats";
@@ -75,15 +74,13 @@ const Home = () => {
       fcr: "84%",
       sla: "81%"
     },
-  ];
-
-  {
+    {
       name: "Mildred",
       aht: "285s",
       csat: "89%",
       fcr: "84%",
       sla: "81%"
-    },
+    }
   ];
 
   const channelPerformance = [
