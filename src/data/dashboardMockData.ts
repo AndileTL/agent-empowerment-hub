@@ -114,7 +114,7 @@ export const getChannelPerformance = (): ChannelData[] => [
     sla: "82%",
     volume: "230",
     topPerformer: "Jessica Smith"
-  },
+  }
 ];
 
 export const getRecentActivities = (): ActivityItem[] => [
@@ -137,7 +137,7 @@ export const getRecentActivities = (): ActivityItem[] => [
     type: "training",
     message: "Mark Wilson completed advanced training",
     timestamp: "1d ago",
-  },
+  }
 ];
 
 export const getSLAData = (): SLAData[] => [
