@@ -50,7 +50,7 @@ export const getCallReasonData = (): CallReasonItem[] => [
   { name: "Account Management", value: 17, color: "#81d4fa" },
   { name: "Product Information", value: 15, color: "#4caf50" },
   { name: "Service Outage", value: 10, color: "#cddc39" },
-  { name: "Other", value: 8, color: "#ffeb3b" },
+  { name: "Other", value: 8, color: "#ffeb3b" }
 ];
 
 export const getTeamPerformance = (): TeamData[] => [
@@ -87,7 +87,7 @@ export const getTeamPerformance = (): TeamData[] => [
 export const getChannelPerformance = (): ChannelData[] => [
   {
     channel: "Voice",
-    icon: <Phone size={16} />,
+    icon: React.createElement(Phone, { size: 16 }),
     aht: "310s",
     csat: "88%",
     fcr: "79%",
@@ -97,7 +97,7 @@ export const getChannelPerformance = (): ChannelData[] => [
   },
   {
     channel: "Email",
-    icon: <ExternalLink size={16} />,
+    icon: React.createElement(ExternalLink, { size: 16 }),
     aht: "720s",
     csat: "92%",
     fcr: "87%",
@@ -107,7 +107,7 @@ export const getChannelPerformance = (): ChannelData[] => [
   },
   {
     channel: "Chat",
-    icon: <MessageSquare size={16} />,
+    icon: React.createElement(MessageSquare, { size: 16 }),
     aht: "420s",
     csat: "94%",
     fcr: "90%",
@@ -121,22 +121,22 @@ export const getRecentActivities = (): ActivityItem[] => [
   {
     type: "new-agent",
     message: "New agent Sarah Johnson joined Team Alpha",
-    timestamp: "2h ago",
+    timestamp: "2h ago"
   },
   {
     type: "target-exceeded",
     message: "Team Beta exceeded CSAT target for Q1",
-    timestamp: "3h ago",
+    timestamp: "3h ago"
   },
   {
     type: "update",
     message: "Updated AHT targets for all teams",
-    timestamp: "5h ago",
+    timestamp: "5h ago"
   },
   {
     type: "training",
     message: "Mark Wilson completed advanced training",
-    timestamp: "1d ago",
+    timestamp: "1d ago"
   }
 ];
 
