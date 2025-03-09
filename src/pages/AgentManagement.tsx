@@ -11,7 +11,7 @@ import { AddAgentForm } from "@/components/forms/AddAgentForm";
 
 const AgentManagement = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const { data: agentStats, mutate } = useCSRStats();
+  const { data: agentStats, mutate } = useCSRStats({});
   const navigate = useNavigate();
 
   const handleAddSuccess = () => {
