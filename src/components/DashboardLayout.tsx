@@ -1,4 +1,3 @@
-
 import { SidebarProvider, Sidebar, SidebarContent, SidebarTrigger } from "@/components/ui/sidebar";
 import { Menu, BarChart2, Users, LineChart, Headset, BookOpen, CheckSquare, Settings, Award, AlertCircle, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -79,8 +78,8 @@ const DashboardLayout = ({
     },
     {
       icon: AlertCircle,
-      label: "News",
-      route: "/news",
+      label: "System Logs",
+      route: "/system-logs",
       badge: "New"
     }
   ];
