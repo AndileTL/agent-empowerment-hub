@@ -15,6 +15,8 @@ const AgentManagement = () => {
   const navigate = useNavigate();
 
   const handleAddSuccess = () => {
+    // Refresh the agent stats after a new agent is added
+    mutate();
     setIsAddDialogOpen(false);
   };
 
@@ -46,7 +48,7 @@ const AgentManagement = () => {
         </div>
 
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-          <DialogContent className="sm:max-w-[425px] dark:bg-gray-800 dark:text-white">
+          <DialogContent className="sm:max-w-[700px] dark:bg-gray-800 dark:text-white">
             <DialogHeader>
               <DialogTitle>Add New Agent</DialogTitle>
               <DialogDescription className="dark:text-gray-300">
