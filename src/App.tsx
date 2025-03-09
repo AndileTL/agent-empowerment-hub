@@ -15,6 +15,7 @@ import Recognition from "@/pages/Recognition";
 import Training from "@/pages/Training";
 import QAScoring from "@/pages/QAScoring";
 import AgentTickets from "@/pages/AgentTickets";
+import SystemLogs from "@/pages/SystemLogs";
 import NotFound from "@/pages/NotFound";
 import "./App.css";
 
@@ -45,6 +46,7 @@ function App() {
             <Route path="/training" element={<Training />} />
             <Route path="/qa-scoring" element={<QAScoring />} />
             <Route path="/tickets" element={<AgentTickets />} />
+            <Route path="/system-logs" element={<SystemLogs />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Toaster />
