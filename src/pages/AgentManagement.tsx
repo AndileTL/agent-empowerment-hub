@@ -16,6 +16,8 @@ const AgentManagement = () => {
 
   const handleAddSuccess = () => {
     // Refresh the agent stats after a new agent is added
+    // No need to pass arguments to mutate here since it's just refreshing the data
+    // We'll use the invalidateQueries method inside the hook
     mutate();
     setIsAddDialogOpen(false);
   };

@@ -59,7 +59,13 @@ export const useCSRStats = ({ startDate, endDate, agentId }: UseCSRStatsOptions 
     },
   });
 
-  const mutate = async (updates: Partial<CSRStatsData> & { agent_id: string; email: string }) => {
+  const mutate = async (updates?: Partial<CSRStatsData> & { agent_id: string; email: string }) => {
+    // If no updates provided, just invalidate the query to refresh data
+    if (!updates) {
+      queryClient.invalidateQueries({ queryKey: ['csr-stats'] });
+      return null;
+    }
+
     if (!updates.agent_id || !updates.email) {
       throw new Error('agent_id and email are required fields');
     }
