@@ -1,13 +1,28 @@
 
-import React from "react";
+import React, { useState } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import AgentPerformanceDetails from "@/components/dashboard/AgentPerformanceDetails";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCSRStats } from "@/hooks/useCSRStats";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { subDays } from "date-fns";
 
 const AgentPerformanceOverview = () => {
-  const { data: agents } = useCSRStats();
+  const [dateRange, setDateRange] = useState({
+    from: subDays(new Date(), 30),
+    to: new Date(),
+  });
+  
+  // Convert date objects to ISO string format for the API
+  const startDate = dateRange.from ? dateRange.from.toISOString().split('T')[0] : undefined;
+  const endDate = dateRange.to ? dateRange.to.toISOString().split('T')[0] : undefined;
+  
+  // Use the date range for filtering agent data
+  const { data: agents, isLoading } = useCSRStats({
+    startDate,
+    endDate
+  });
 
   return (
     <DashboardLayout>
@@ -18,6 +33,12 @@ const AgentPerformanceOverview = () => {
             <p className="mt-1 text-gray-600 dark:text-gray-300">
               View detailed performance metrics for all agents
             </p>
+          </div>
+          <div className="flex-shrink-0">
+            <DateRangePicker
+              date={dateRange}
+              onDateChange={setDateRange}
+            />
           </div>
         </div>
 
@@ -79,7 +100,13 @@ const AgentPerformanceOverview = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <AgentPerformanceDetails />
+            {isLoading ? (
+              <div className="flex justify-center p-8">
+                <p className="text-gray-500 dark:text-gray-400">Loading agent data...</p>
+              </div>
+            ) : (
+              <AgentPerformanceDetails agents={agents} />
+            )}
           </CardContent>
         </Card>
       </div>
