@@ -1,18 +1,17 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY package.json bun.lockb ./
+COPY package.json package-lock.json ./
 COPY . .
-RUN npm install --frozen-lockfile || bun install --frozen-lockfile
+RUN npm install
 RUN npm run build
 
-# Production image
 FROM node:20-alpine AS production
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
-RUN npm install --production --frozen-lockfile || bun install --production --frozen-lockfile
+COPY --from=builder /app/package-lock.json ./
+RUN npm install --production
 
-# Use a simple static file server for the built files
 RUN npm install -g serve
 EXPOSE 3000
 CMD ["serve", "-s", "dist", "-l", "3000"]
